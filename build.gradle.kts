@@ -45,6 +45,7 @@ val openApiToolsVersion = "0.2.6"
 val micrometerVersion = "1.5.1"
 val httpClientVersion = "5.5"
 val bouncycastleVersion = "1.81"
+val springWolfAsyncApiVersion = "1.13.0"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter")
@@ -54,6 +55,9 @@ dependencies {
   implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}")
+  implementation ("io.github.springwolf:springwolf-kafka:${springWolfAsyncApiVersion}")
+  implementation("io.github.springwolf:springwolf-ui:${springWolfAsyncApiVersion}")
+  implementation("io.github.springwolf:springwolf-cloud-stream:${springWolfAsyncApiVersion}")
   implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
   implementation("io.micrometer:micrometer-registry-prometheus")
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
