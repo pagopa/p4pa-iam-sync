@@ -33,13 +33,13 @@ spring:
           binder: kafka-iam-organization-consumer
           content-type: "\${KAFKA_CONTENT_TYPE:application/json}"
           destination: "\${KAFKA_IAM_ORGANIZATIONS_TOPIC:sc-contracts}"
-          group: "\${KAFKA_IAM_ORGANIZATIONS_GROUP_ID:piattaforma-unitaria-consumer}"
+          group: "\${KAFKA_IAM_ORGANIZATIONS_GROUP_ID:piattaforma-unitaria-organizations-consumer}"
           consumer.auto-startup: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_ENABLED:true}"
         iamUsersConsumer-in-0:
           binder: kafka-iam-users-consumer
           content-type: "\${KAFKA_CONTENT_TYPE:application/json}"
           destination: "\${KAFKA_IAM_USERS_TOPIC:sc-users}"
-          group: "\${KAFKA_IAM_USERS_GROUP_ID:piattaforma-unitaria-consumer}"
+          group: "\${KAFKA_IAM_USERS_GROUP_ID:piattaforma-unitaria-users-consumer}"
           consumer.auto-startup: "\${KAFKA_IAM_USERS_CONSUMER_ENABLED:true}"
       kafka:
         binder:
