@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class OrganizationApisHolder {
 
+  private final OrganizationApi organizationApi;
   private final OrganizationSearchControllerApi organizationSearchControllerApi;
   private final OrganizationEntityControllerApi organizationEntityControllerApi;
   private final TaxonomySearchControllerApi taxonomySearchControllerApi;
@@ -33,6 +34,7 @@ public class OrganizationApisHolder {
       restTemplate.setErrorHandler(RestTemplateConfig.bodyPrinterWhenError("ORGANIZATION"));
     }
 
+    this.organizationApi = new OrganizationApi(apiClient);
     this.organizationSearchControllerApi = new OrganizationSearchControllerApi(apiClient);
     this.taxonomySearchControllerApi = new TaxonomySearchControllerApi(apiClient);
     this.organizationEntityControllerApi = new OrganizationEntityControllerApi(apiClient);
@@ -43,6 +45,13 @@ public class OrganizationApisHolder {
   @PreDestroy
   public void unload() {
     bearerTokenHolder.remove();
+  }
+
+  /**
+   * It will return a {@link OrganizationApisHolder} instrumented with the provided accessToken. Use null if auth is not required
+   */
+  public OrganizationApi getOrganizationApi(String accessToken) {
+    return getApi(accessToken, organizationApi);
   }
 
   /**

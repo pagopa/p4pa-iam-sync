@@ -1,6 +1,7 @@
 package it.gov.pagopa.pu.iamsync.connector.organization.config;
 
 import it.gov.pagopa.pu.iamsync.connector.BaseApiHolderTest;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,18 @@ class OrganizationApisHolderTest extends BaseApiHolderTest {
                 restTemplateBuilderMock,
                 restTemplateMock
         );
+    }
+
+    @Test
+    void whenGetOrganizationApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
+      assertAuthenticationShouldBeSetInThreadSafeMode(
+        accessToken -> {
+          organizationApisHolder.getOrganizationApi(accessToken)
+            .createOrganization(new OrganizationCreateDTO());
+          return voidMock;
+        },
+        new ParameterizedTypeReference<>() {},
+        organizationApisHolder::unload);
     }
 
     @Test
