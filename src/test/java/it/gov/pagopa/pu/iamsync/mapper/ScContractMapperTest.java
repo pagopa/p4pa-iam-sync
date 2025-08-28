@@ -46,7 +46,6 @@ class ScContractMapperTest {
     assertEquals(scContractEvent.getInstitution().getDescription(), result.getOrgName());
     assertEquals(scContractEvent.getInstitution().getInstitutionType(), result.getOrgTypeCode());
     assertEquals(scContractEvent.getInstitution().getDigitalAddress(), result.getOrgEmail());
-    assertEquals(scContractEvent.getRootAggregator().getInstitutionId(), String.valueOf(result.getBrokerId()));
     assertFalse(result.getFlagNotifyIo());
     assertFalse(result.getFlagNotifyOutcomePush());
     assertFalse(result.getFlagPaymentNotification());

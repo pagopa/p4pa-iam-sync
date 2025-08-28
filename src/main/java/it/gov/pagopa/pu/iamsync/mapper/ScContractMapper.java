@@ -25,8 +25,6 @@ public class ScContractMapper {
     organizationCreateDTO.setOrgTypeCode(scContractEvent.getInstitution().getInstitutionType());
     organizationCreateDTO.setOrgEmail(scContractEvent.getInstitution().getDigitalAddress());
 
-    organizationCreateDTO.setBrokerId(Long.valueOf(scContractEvent.getRootAggregator().getInstitutionId()));
-
     organizationCreateDTO.setFlagNotifyIo(false);
     organizationCreateDTO.setFlagNotifyOutcomePush(false);
     organizationCreateDTO.setFlagPaymentNotification(false);
