@@ -18,17 +18,21 @@ public class OrganizationCreationHandlerServiceImpl implements OrganizationCreat
   @Override
   public void createOrganization(ScContractDTO scContractEvent) {
     String accessToken = SecurityUtils.getAccessToken();
-    if (OrganizationStatus.ACTIVE.getValue().equals(scContractEvent.getState())) {
-        organizationService.getOrganizationByIpaCode(scContractEvent.getInstitution().getOriginId(), accessToken)
-          .ifPresentOrElse(
-            organization -> {
-              if (OrganizationStatus.CANCELLED.equals(organization.getStatus())) {
-                organization.setStatus(OrganizationStatus.DRAFT);
-                organizationService.updateOrganization(organization, accessToken);
-              }
-            },
-            () -> organizationService.createOrganization(scContractMapper.mapToOrganizationCreateDTO(scContractEvent), accessToken)
-          );
+    if (OrganizationStatus.ACTIVE.getValue()
+      .equals(scContractEvent.getState())) {
+      organizationService.getOrganizationByIpaCode(
+          scContractEvent.getInstitution().getOriginId(), accessToken)
+        .ifPresentOrElse(
+          organization -> {
+            if (OrganizationStatus.CANCELLED.equals(organization.getStatus())) {
+              organization.setStatus(OrganizationStatus.DRAFT);
+              organizationService.updateOrganization(organization, accessToken);
+            }
+          },
+          () -> organizationService.createOrganization(
+            scContractMapper.mapToOrganizationCreateDTO(scContractEvent,
+              OrganizationStatus.DRAFT), accessToken)
+        );
     }
 
     if (OrganizationStatus.CANCELLED.getValue().equals(scContractEvent.getState())) {

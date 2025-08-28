@@ -134,7 +134,8 @@ class OrganizationCreationHandlerServiceTest {
       TestUtils.getFakeAccessToken()))
       .thenReturn(Optional.empty());
 
-    when(scContractMapperMock.mapToOrganizationCreateDTO(scContractEvent))
+    when(scContractMapperMock.mapToOrganizationCreateDTO(scContractEvent,
+      OrganizationStatus.DRAFT))
       .thenReturn(new OrganizationCreateDTO());
 
     doNothing().when(organizationServiceMock)
@@ -171,7 +172,8 @@ class OrganizationCreationHandlerServiceTest {
       .thenReturn(Optional.of(organization));
 
     organization.setStatus(OrganizationStatus.CANCELLED);
-    when(organizationServiceMock.updateOrganization(organization, TestUtils.getFakeAccessToken()))
+    when(organizationServiceMock.updateOrganization(organization,
+      TestUtils.getFakeAccessToken()))
       .thenReturn(organization);
 
     organizationCreationHandlerService.createOrganization(scContractEvent);

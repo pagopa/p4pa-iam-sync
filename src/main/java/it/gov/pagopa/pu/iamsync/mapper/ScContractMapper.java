@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 public class ScContractMapper {
 
   public OrganizationCreateDTO mapToOrganizationCreateDTO(ScContractDTO scContractEvent) {
+    return mapToOrganizationCreateDTO(scContractEvent, OrganizationStatus.valueOf(scContractEvent.getState()));
+  }
+
+  public OrganizationCreateDTO mapToOrganizationCreateDTO(ScContractDTO scContractEvent, OrganizationStatus status) {
     OrganizationCreateDTO organizationCreateDTO = new OrganizationCreateDTO();
 
     organizationCreateDTO.setExternalOrganizationId(scContractEvent.getInstitutionId());
     organizationCreateDTO.setStartDate(scContractEvent.getCreatedAt().toLocalDate());
-    organizationCreateDTO.setStatus(OrganizationStatus.valueOf(scContractEvent.getState()));
+    organizationCreateDTO.setStatus(status);
 
     organizationCreateDTO.setIpaCode(scContractEvent.getInstitution().getOriginId());
     organizationCreateDTO.setOrgFiscalCode(scContractEvent.getInstitution().getTaxCode());
