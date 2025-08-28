@@ -44,5 +44,7 @@ class OrganizationClientTest {
     doNothing().when(organizationApiMock).createOrganization(any(OrganizationCreateDTO.class));
 
     organizationClient.createOrganization(new OrganizationCreateDTO(), accessToken);
+
+    Mockito.verifyNoMoreInteractions(organizationApisHolderMock, organizationApiMock);
   }
 }

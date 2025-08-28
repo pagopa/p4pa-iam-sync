@@ -175,6 +175,9 @@ class OrganizationCreationHandlerServiceTest {
       .thenReturn(organization);
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
+
+    Mockito.verifyNoMoreInteractions(organizationServiceMock);
+    Mockito.verifyNoInteractions(scContractMapperMock);
   }
 
   /**

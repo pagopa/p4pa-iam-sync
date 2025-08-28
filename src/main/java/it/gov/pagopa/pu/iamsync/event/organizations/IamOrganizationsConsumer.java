@@ -26,13 +26,17 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
       scContractEvent.getType()
     );
 
-    if (PIATTAFORMA_UNITARIA_PRODUCT.equals(scContractEvent.getProduct())) {
-      if (scContractEvent.getRootAggregator().getInstitutionId() == null) {
-        log.info("Missing brokerId, event will be discarded");
-      }
-
-      organizationCreationHandlerService.createOrganization(scContractEvent);
+    if (!PIATTAFORMA_UNITARIA_PRODUCT.equals(scContractEvent.getProduct())) {
+      log.info("Discarding event due to not matching product");
+      return;
     }
+
+    if (scContractEvent.getRootAggregator() == null || scContractEvent.getRootAggregator().getInstitutionId() == null) {
+      log.info("Discarding event due to missing brokerId");
+      return;
+    }
+
+    organizationCreationHandlerService.createOrganization(scContractEvent);
   }
 
 }

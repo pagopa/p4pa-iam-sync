@@ -46,7 +46,7 @@ class OrganizationServiceTest {
   @AfterEach
   void verifyNoMoreInteractions() {
     Mockito.verifyNoMoreInteractions(
-      organizationEntityClientMock,
+      organizationClientMock,
       organizationSearchClientMock,
       organizationEntityClientMock,
       organizationRequestMapperMock
@@ -60,6 +60,9 @@ class OrganizationServiceTest {
     doNothing().when(organizationClientMock).createOrganization(any(OrganizationCreateDTO.class), eq(accessToken));
 
     organizationService.createOrganization(new OrganizationCreateDTO(), accessToken);
+
+    Mockito.verifyNoMoreInteractions(organizationClientMock);
+    Mockito.verifyNoInteractions(organizationSearchClientMock, organizationEntityClientMock, organizationRequestMapperMock);
   }
 
   @Test
