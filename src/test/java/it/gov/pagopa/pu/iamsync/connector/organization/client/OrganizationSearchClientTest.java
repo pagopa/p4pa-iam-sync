@@ -40,12 +40,16 @@ class OrganizationSearchClientTest {
     String orgIpaCode = "ipaCode";
     Organization expectedResult = new Organization();
 
-    Mockito.when(organizationApisHolderMock.getOrganizationSearchControllerApi(accessToken))
+    Mockito.when(organizationApisHolderMock.getOrganizationSearchControllerApi(
+        accessToken))
       .thenReturn(organizationSearchControllerApiMock);
-    Mockito.when(organizationSearchControllerApiMock.crudOrganizationsFindByIpaCode(orgIpaCode))
+    Mockito.when(
+        organizationSearchControllerApiMock.crudOrganizationsFindByIpaCode(
+          orgIpaCode))
       .thenReturn(expectedResult);
 
-    Organization result = organizationSearchClient.findByIpaCode(orgIpaCode, accessToken);
+    Organization result = organizationSearchClient.findByIpaCode(orgIpaCode,
+      accessToken);
 
     Assertions.assertSame(expectedResult, result);
   }
@@ -55,13 +59,63 @@ class OrganizationSearchClientTest {
     String accessToken = "accessToken";
     String orgIpaCode = "ipaCode";
 
-    Mockito.when(organizationApisHolderMock.getOrganizationSearchControllerApi(accessToken))
+    Mockito.when(organizationApisHolderMock.getOrganizationSearchControllerApi(
+        accessToken))
       .thenReturn(organizationSearchControllerApiMock);
-    Mockito.when(organizationSearchControllerApiMock.crudOrganizationsFindByIpaCode(orgIpaCode))
-      .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+    Mockito.when(
+        organizationSearchControllerApiMock.crudOrganizationsFindByIpaCode(
+          orgIpaCode))
+      .thenThrow(
+        HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null,
+          null, null));
 
     // When
-    Organization result = organizationSearchClient.findByIpaCode(orgIpaCode, accessToken);
+    Organization result = organizationSearchClient.findByIpaCode(orgIpaCode,
+      accessToken);
+
+    // Then
+    Assertions.assertNull(result);
+  }
+
+
+  @Test
+  void whenFindByExternalOrganizationIdThenInvokeWithAccessToken() {
+    String accessToken = "accessToken";
+    String externalOrganizationId = "externalOrganizationId";
+    Organization expectedResult = new Organization();
+
+    Mockito.when(organizationApisHolderMock.getOrganizationSearchControllerApi(
+        accessToken))
+      .thenReturn(organizationSearchControllerApiMock);
+    Mockito.when(
+        organizationSearchControllerApiMock.crudOrganizationsFindByExternalOrganizationId(
+          externalOrganizationId))
+      .thenReturn(expectedResult);
+
+    Organization result = organizationSearchClient.findByExternalOrganizationId(
+      externalOrganizationId, accessToken);
+
+    Assertions.assertSame(expectedResult, result);
+  }
+
+  @Test
+  void givenNotExistentExternalOrganizationIdWhenFindByExternalOrganizationIdThenNull() {
+    String accessToken = "accessToken";
+    String externalOrganizationId = "externalOrganizationId";
+
+    Mockito.when(organizationApisHolderMock.getOrganizationSearchControllerApi(
+        accessToken))
+      .thenReturn(organizationSearchControllerApiMock);
+    Mockito.when(
+        organizationSearchControllerApiMock.crudOrganizationsFindByExternalOrganizationId(
+          externalOrganizationId))
+      .thenThrow(
+        HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null,
+          null, null));
+
+    // When
+    Organization result = organizationSearchClient.findByExternalOrganizationId(
+      externalOrganizationId, accessToken);
 
     // Then
     Assertions.assertNull(result);

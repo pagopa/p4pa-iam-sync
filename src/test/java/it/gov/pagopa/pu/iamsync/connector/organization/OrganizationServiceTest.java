@@ -1,4 +1,4 @@
-package it.gov.pagopa.pu.iamsync.connector.organization.service;
+package it.gov.pagopa.pu.iamsync.connector.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,8 +9,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import it.gov.pagopa.pu.iamsync.connector.organization.mapper.OrganizationRequestMapper;
-import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
-import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationServiceImpl;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationEntityClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationSearchClient;
@@ -105,6 +103,32 @@ class OrganizationServiceTest {
     Organization result = organizationService.updateOrganization(expectedResult, accessToken);
 
     assertEquals(expectedResult, result);
+  }
+
+  @Test
+  void givenPresentOrganizationWhenGetOrganizationByExternalOrganizationIdThenReturnOrganization() {
+    String accessToken = "accessToken";
+    Organization expectedResult = new Organization();
+
+    when(organizationSearchClientMock.findByExternalOrganizationId(anyString(), eq(accessToken)))
+      .thenReturn(expectedResult);
+
+    Optional<Organization> result = organizationService.getOrganizationByExternalOrganizationId("externalOrganizationId", accessToken);
+
+    assertTrue(result.isPresent());
+    assertEquals(expectedResult, result.get());
+  }
+
+  @Test
+  void givenMissingOrganizationWhenGetOrganizationByExternalOrganizationIdThenReturnOptionalEmpty() {
+    String accessToken = "accessToken";
+
+    when(organizationSearchClientMock.findByExternalOrganizationId(anyString(), eq(accessToken)))
+      .thenReturn(null);
+
+    Optional<Organization> result = organizationService.getOrganizationByExternalOrganizationId("externalOrganizationId", accessToken);
+
+    assertTrue(result.isEmpty());
   }
 
 }

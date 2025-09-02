@@ -2,11 +2,13 @@ package it.gov.pagopa.pu.iamsync.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScRootAggregatorDTO;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationStatus;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +52,13 @@ class ScContractMapperTest {
     assertFalse(result.getFlagNotifyOutcomePush());
     assertFalse(result.getFlagPaymentNotification());
     assertFalse(result.getPdndEnabled());
+  }
+
+  @Test
+  void givenNullEventWhenMapToOrganizationCreateDTOThenReturnNull() {
+    assertNull(scContractMapper.mapToOrganizationCreateDTO(null));
+    assertNull(scContractMapper.mapToOrganizationCreateDTO(null,
+      OrganizationStatus.DRAFT));
   }
 
 }

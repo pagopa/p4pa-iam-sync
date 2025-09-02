@@ -51,9 +51,10 @@ public class OrganizationServiceImpl implements OrganizationService {
   }
 
   @Override
-  public Organization getOrganizationByExternalOrganizationId(
+  public Optional<Organization> getOrganizationByExternalOrganizationId(
     String externalOrganizationId, String accessToken) {
-    return organizationSearchClient.findByExternalOrganizationId(
-      externalOrganizationId, accessToken);
+    return Optional.ofNullable(
+      organizationSearchClient.findByExternalOrganizationId(
+        externalOrganizationId, accessToken));
   }
 }

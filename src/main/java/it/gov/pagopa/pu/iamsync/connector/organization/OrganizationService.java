@@ -12,5 +12,5 @@ public interface OrganizationService {
 
   Organization updateOrganization(Organization organization, String accessToken);
 
-  Organization getOrganizationByExternalOrganizationId(String externalOrganizationId, String accessToken);
+  Optional<Organization> getOrganizationByExternalOrganizationId(String externalOrganizationId, String accessToken);
 }
