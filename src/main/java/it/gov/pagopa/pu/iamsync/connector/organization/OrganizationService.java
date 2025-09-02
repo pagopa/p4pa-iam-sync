@@ -1,4 +1,4 @@
-package it.gov.pagopa.pu.iamsync.connector.organization.service;
+package it.gov.pagopa.pu.iamsync.connector.organization;
 
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
@@ -11,4 +11,6 @@ public interface OrganizationService {
   Optional<Organization> getOrganizationByIpaCode(String ipaCode, String accessToken);
 
   Organization updateOrganization(Organization organization, String accessToken);
+
+  Organization getOrganizationByExternalOrganizationId(String externalOrganizationId, String accessToken);
 }

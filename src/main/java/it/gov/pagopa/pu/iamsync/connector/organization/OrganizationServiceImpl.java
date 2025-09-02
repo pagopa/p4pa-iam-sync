@@ -1,9 +1,9 @@
-package it.gov.pagopa.pu.iamsync.connector.organization.service;
+package it.gov.pagopa.pu.iamsync.connector.organization;
 
-import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationRequestMapper;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationEntityClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationSearchClient;
+import it.gov.pagopa.pu.iamsync.connector.organization.mapper.OrganizationRequestMapper;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import java.util.Optional;
@@ -28,22 +28,32 @@ public class OrganizationServiceImpl implements OrganizationService {
   }
 
   @Override
-  public void createOrganization(OrganizationCreateDTO organizationCreateDTO, String accessToken) {
+  public void createOrganization(OrganizationCreateDTO organizationCreateDTO,
+    String accessToken) {
     organizationClient.createOrganization(organizationCreateDTO, accessToken);
   }
 
   @Override
-  public Optional<Organization> getOrganizationByIpaCode(String ipaCode, String accessToken) {
+  public Optional<Organization> getOrganizationByIpaCode(String ipaCode,
+    String accessToken) {
     return Optional.ofNullable(
       organizationSearchClient.findByIpaCode(ipaCode, accessToken)
     );
   }
 
   @Override
-  public Organization updateOrganization(Organization organization, String accessToken) {
+  public Organization updateOrganization(Organization organization,
+    String accessToken) {
     return organizationEntityClient.updateOrganization(
       String.valueOf(organization.getOrganizationId()),
       organizationRequestMapper.map(organization),
       accessToken);
+  }
+
+  @Override
+  public Organization getOrganizationByExternalOrganizationId(
+    String externalOrganizationId, String accessToken) {
+    return organizationSearchClient.findByExternalOrganizationId(
+      externalOrganizationId, accessToken);
   }
 }

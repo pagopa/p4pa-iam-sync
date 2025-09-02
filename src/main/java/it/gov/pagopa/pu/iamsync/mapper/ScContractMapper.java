@@ -13,6 +13,10 @@ public class ScContractMapper {
   }
 
   public OrganizationCreateDTO mapToOrganizationCreateDTO(ScContractDTO scContractEvent, OrganizationStatus status) {
+    if (scContractEvent == null) {
+      return null;
+    }
+
     OrganizationCreateDTO organizationCreateDTO = new OrganizationCreateDTO();
 
     organizationCreateDTO.setExternalOrganizationId(scContractEvent.getInstitutionId());

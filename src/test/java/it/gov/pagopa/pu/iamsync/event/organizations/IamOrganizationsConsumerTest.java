@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScRootAggregatorDTO;
-import it.gov.pagopa.pu.iamsync.service.OrganizationCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.organization.OrganizationCreationHandlerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

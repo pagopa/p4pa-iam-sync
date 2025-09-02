@@ -3,7 +3,7 @@ package it.gov.pagopa.pu.iamsync.event.organizations;
 import static it.gov.pagopa.pu.iamsync.utils.Constants.PIATTAFORMA_UNITARIA_PRODUCT;
 
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
-import it.gov.pagopa.pu.iamsync.service.OrganizationCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.organization.OrganizationCreationHandlerService;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

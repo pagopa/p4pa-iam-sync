@@ -7,10 +7,12 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import it.gov.pagopa.pu.iamsync.connector.organization.service.OrganizationService;
+import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
 import it.gov.pagopa.pu.iamsync.mapper.ScContractMapper;
+import it.gov.pagopa.pu.iamsync.service.organization.OrganizationCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.organization.OrganizationCreationHandlerServiceImpl;
 import it.gov.pagopa.pu.iamsync.utils.TestUtils;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;

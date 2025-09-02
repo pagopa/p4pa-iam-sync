@@ -1,4 +1,4 @@
-package it.gov.pagopa.pu.iamsync.connector.organization;
+package it.gov.pagopa.pu.iamsync.connector.organization.mapper;
 
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationRequestBody;

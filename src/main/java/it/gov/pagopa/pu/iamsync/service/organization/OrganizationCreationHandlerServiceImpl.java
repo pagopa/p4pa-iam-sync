@@ -1,6 +1,6 @@
-package it.gov.pagopa.pu.iamsync.service;
+package it.gov.pagopa.pu.iamsync.service.organization;
 
-import it.gov.pagopa.pu.iamsync.connector.organization.service.OrganizationService;
+import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.mapper.ScContractMapper;
 import it.gov.pagopa.pu.iamsync.utils.SecurityUtils;

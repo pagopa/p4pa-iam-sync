@@ -8,7 +8,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationRequestMapper;
+import it.gov.pagopa.pu.iamsync.connector.organization.mapper.OrganizationRequestMapper;
+import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
+import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationServiceImpl;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationEntityClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationSearchClient;

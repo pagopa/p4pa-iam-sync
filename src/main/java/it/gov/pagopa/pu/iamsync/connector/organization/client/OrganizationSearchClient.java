@@ -25,4 +25,14 @@ public class OrganizationSearchClient {
       return null;
     }
   }
+
+  public Organization findByExternalOrganizationId(String externalOrganizationId, String accessToken) {
+    try{
+      return organizationApisHolder.getOrganizationSearchControllerApi(accessToken)
+        .crudOrganizationsFindByExternalOrganizationId(externalOrganizationId);
+    } catch (HttpClientErrorException.NotFound e){
+      log.info("Cannot find organization having externalOrganizationId {}", externalOrganizationId);
+      return null;
+    }
+  }
 }
