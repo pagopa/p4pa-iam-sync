@@ -23,7 +23,6 @@ public class ScUsersMapper {
     createOperatorRequest.setFirstName(user.getName());
     createOperatorRequest.setLastName(user.getFamilyName());
     createOperatorRequest.setEmail(user.getEmail());
-    createOperatorRequest.setFiscalCode("");  // TODO: this field is required but missing in event DTO
 
     return createOperatorRequest;
   }
