@@ -10,7 +10,6 @@ import it.gov.pagopa.pu.iamsync.connector.auth.AuthzService;
 import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
 import it.gov.pagopa.pu.iamsync.mapper.ScUsersMapper;
-import it.gov.pagopa.pu.iamsync.utils.TestUtils;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,8 +52,7 @@ class OperatorCreationHandlerServiceTest {
 
   @Test
   void whenCreateOrganizationOperatorThenOk() {
-    TestUtils.setFakeAccessTokenInContext();
-
+    String accessToken = "accessToken";
     ScUsersNotificationDTO scUsersEvent = new ScUsersNotificationDTO();
     scUsersEvent.setInstitutionId(UUID.randomUUID().toString());
 
@@ -63,9 +61,11 @@ class OperatorCreationHandlerServiceTest {
     Organization organization = new Organization();
     organization.setIpaCode("ipaCode");
 
+
+
+    when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
     when(organizationServiceMock.getOrganizationByExternalOrganizationId(
-      scUsersEvent.getInstitutionId(),
-      TestUtils.getFakeAccessToken())).thenReturn(Optional.of(organization));
+      scUsersEvent.getInstitutionId(), accessToken)).thenReturn(Optional.of(organization));
     when(scUsersMapperMock.mapToCreateOperatorRequest(scUsersEvent)).thenReturn(
       createOperatorRequest);
     when(authzServiceMock.createOrganizationOperator(organization.getIpaCode(),
@@ -80,14 +80,14 @@ class OperatorCreationHandlerServiceTest {
 
   @Test
   void givenMissingOrganizationWhenCreateOrganizationOperatorThenThrowException() {
-    TestUtils.setFakeAccessTokenInContext();
-
+    String accessToken = "accessToken";
     ScUsersNotificationDTO scUsersEvent = new ScUsersNotificationDTO();
     scUsersEvent.setInstitutionId(UUID.randomUUID().toString());
 
+    when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
     when(organizationServiceMock.getOrganizationByExternalOrganizationId(
       scUsersEvent.getInstitutionId(),
-      TestUtils.getFakeAccessToken())).thenReturn(Optional.empty());
+      accessToken)).thenReturn(Optional.empty());
 
     Executable exec = () -> operatorCreationHandlerService.createOrganizationOperator(
       scUsersEvent);
