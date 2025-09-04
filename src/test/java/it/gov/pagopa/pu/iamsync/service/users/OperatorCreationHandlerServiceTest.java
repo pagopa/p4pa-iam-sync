@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
 import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
-import it.gov.pagopa.pu.iamsync.connector.auth.AuthnService;
 import it.gov.pagopa.pu.iamsync.connector.auth.AuthzService;
 import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
@@ -27,8 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class OperatorCreationHandlerServiceTest {
 
   @Mock
-  private AuthnService authnServiceMock;
-  @Mock
   private AuthzService authzServiceMock;
   @Mock
   private OrganizationService organizationServiceMock;
@@ -40,7 +37,7 @@ class OperatorCreationHandlerServiceTest {
   @BeforeEach
   void setup() {
     operatorCreationHandlerService = new OperatorCreationHandlerServiceImpl(
-      authnServiceMock, authzServiceMock, organizationServiceMock,
+      authzServiceMock, organizationServiceMock,
       scUsersMapperMock);
   }
 
@@ -52,7 +49,6 @@ class OperatorCreationHandlerServiceTest {
 
   @Test
   void whenCreateOrganizationOperatorThenOk() {
-    String accessToken = "accessToken";
     ScUsersNotificationDTO scUsersEvent = new ScUsersNotificationDTO();
     scUsersEvent.setInstitutionId(UUID.randomUUID().toString());
 
@@ -61,11 +57,8 @@ class OperatorCreationHandlerServiceTest {
     Organization organization = new Organization();
     organization.setIpaCode("ipaCode");
 
-
-
-    when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
     when(organizationServiceMock.getOrganizationByExternalOrganizationId(
-      scUsersEvent.getInstitutionId(), accessToken)).thenReturn(Optional.of(organization));
+      scUsersEvent.getInstitutionId())).thenReturn(Optional.of(organization));
     when(scUsersMapperMock.mapToCreateOperatorRequest(scUsersEvent)).thenReturn(
       createOperatorRequest);
     when(authzServiceMock.createOrganizationOperator(organization.getIpaCode(),
@@ -80,14 +73,11 @@ class OperatorCreationHandlerServiceTest {
 
   @Test
   void givenMissingOrganizationWhenCreateOrganizationOperatorThenThrowException() {
-    String accessToken = "accessToken";
     ScUsersNotificationDTO scUsersEvent = new ScUsersNotificationDTO();
     scUsersEvent.setInstitutionId(UUID.randomUUID().toString());
 
-    when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
     when(organizationServiceMock.getOrganizationByExternalOrganizationId(
-      scUsersEvent.getInstitutionId(),
-      accessToken)).thenReturn(Optional.empty());
+      scUsersEvent.getInstitutionId())).thenReturn(Optional.empty());
 
     Executable exec = () -> operatorCreationHandlerService.createOrganizationOperator(
       scUsersEvent);

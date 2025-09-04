@@ -28,33 +28,29 @@ public class OrganizationServiceImpl implements OrganizationService {
   }
 
   @Override
-  public void createOrganization(OrganizationCreateDTO organizationCreateDTO,
-    String accessToken) {
-    organizationClient.createOrganization(organizationCreateDTO, accessToken);
+  public void createOrganization(OrganizationCreateDTO organizationCreateDTO) {
+    organizationClient.createOrganization(organizationCreateDTO);
   }
 
   @Override
-  public Optional<Organization> getOrganizationByIpaCode(String ipaCode,
-    String accessToken) {
+  public Optional<Organization> getOrganizationByIpaCode(String ipaCode) {
     return Optional.ofNullable(
-      organizationSearchClient.findByIpaCode(ipaCode, accessToken)
+      organizationSearchClient.findByIpaCode(ipaCode)
     );
   }
 
   @Override
-  public Organization updateOrganization(Organization organization,
-    String accessToken) {
+  public Organization updateOrganization(Organization organization) {
     return organizationEntityClient.updateOrganization(
       String.valueOf(organization.getOrganizationId()),
-      organizationRequestMapper.map(organization),
-      accessToken);
+      organizationRequestMapper.map(organization));
   }
 
   @Override
   public Optional<Organization> getOrganizationByExternalOrganizationId(
-    String externalOrganizationId, String accessToken) {
+    String externalOrganizationId) {
     return Optional.ofNullable(
       organizationSearchClient.findByExternalOrganizationId(
-        externalOrganizationId, accessToken));
+        externalOrganizationId));
   }
 }

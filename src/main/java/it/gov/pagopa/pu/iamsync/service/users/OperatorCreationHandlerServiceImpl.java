@@ -1,7 +1,6 @@
 package it.gov.pagopa.pu.iamsync.service.users;
 
 import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
-import it.gov.pagopa.pu.iamsync.connector.auth.AuthnService;
 import it.gov.pagopa.pu.iamsync.connector.auth.AuthzService;
 import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
@@ -14,15 +13,13 @@ import org.springframework.stereotype.Service;
 public class OperatorCreationHandlerServiceImpl implements
   OperatorCreationHandlerService {
 
-  private final AuthnService authnService;
   private final AuthzService authzService;
   private final OrganizationService organizationService;
   private final ScUsersMapper scUsersMapper;
 
-  public OperatorCreationHandlerServiceImpl(
-    AuthnService authnService, AuthzService authzService, OrganizationService organizationService,
+  public OperatorCreationHandlerServiceImpl(AuthzService authzService,
+    OrganizationService organizationService,
     ScUsersMapper scUsersMapper) {
-    this.authnService = authnService;
     this.authzService = authzService;
     this.organizationService = organizationService;
     this.scUsersMapper = scUsersMapper;
@@ -31,9 +28,10 @@ public class OperatorCreationHandlerServiceImpl implements
   @Override
   public void createOrganizationOperator(ScUsersNotificationDTO scUsersEvent) {
     Organization organization = organizationService.getOrganizationByExternalOrganizationId(
-        scUsersEvent.getInstitutionId(), authnService.getAccessToken())
+        scUsersEvent.getInstitutionId())
       .orElseThrow(() -> new ResourceNotFoundException(
-        "Organization with externalOrganizationId " + scUsersEvent.getInstitutionId() + " not found."));
+        "Organization with externalOrganizationId "
+          + scUsersEvent.getInstitutionId() + " not found."));
 
     CreateOperatorRequest createOperatorRequest = scUsersMapper.mapToCreateOperatorRequest(
       scUsersEvent);

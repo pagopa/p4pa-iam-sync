@@ -4,14 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import it.gov.pagopa.pu.iamsync.connector.organization.mapper.OrganizationRequestMapper;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationEntityClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationSearchClient;
+import it.gov.pagopa.pu.iamsync.connector.organization.mapper.OrganizationRequestMapper;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationRequestBody;
@@ -40,7 +39,9 @@ class OrganizationServiceTest {
 
   @BeforeEach
   void setup() {
-    organizationService = new OrganizationServiceImpl(organizationClientMock, organizationSearchClientMock, organizationEntityClientMock, organizationRequestMapperMock);
+    organizationService = new OrganizationServiceImpl(organizationClientMock,
+      organizationSearchClientMock, organizationEntityClientMock,
+      organizationRequestMapperMock);
   }
 
   @AfterEach
@@ -55,25 +56,25 @@ class OrganizationServiceTest {
 
   @Test
   void whenCreateOrganizationThenInvokeClient() {
-    String accessToken = "accessToken";
+    doNothing().when(organizationClientMock)
+      .createOrganization(any(OrganizationCreateDTO.class));
 
-    doNothing().when(organizationClientMock).createOrganization(any(OrganizationCreateDTO.class), eq(accessToken));
-
-    organizationService.createOrganization(new OrganizationCreateDTO(), accessToken);
+    organizationService.createOrganization(new OrganizationCreateDTO());
 
     Mockito.verifyNoMoreInteractions(organizationClientMock);
-    Mockito.verifyNoInteractions(organizationSearchClientMock, organizationEntityClientMock, organizationRequestMapperMock);
+    Mockito.verifyNoInteractions(organizationSearchClientMock,
+      organizationEntityClientMock, organizationRequestMapperMock);
   }
 
   @Test
   void givenPresentOrganizationWhenGetOrganizationByIpaCodeThenReturnOrganization() {
-    String accessToken = "accessToken";
     Organization expectedResult = new Organization();
 
-    when(organizationSearchClientMock.findByIpaCode(anyString(), eq(accessToken)))
+    when(organizationSearchClientMock.findByIpaCode(anyString()))
       .thenReturn(expectedResult);
 
-    Optional<Organization> result = organizationService.getOrganizationByIpaCode("ipaCode", accessToken);
+    Optional<Organization> result = organizationService.getOrganizationByIpaCode(
+      "ipaCode");
 
     assertTrue(result.isPresent());
     assertEquals(expectedResult, result.get());
@@ -81,39 +82,40 @@ class OrganizationServiceTest {
 
   @Test
   void givenMissingOrganizationWhenGetOrganizationByIpaCodeThenReturnOptionalEmpty() {
-    String accessToken = "accessToken";
-
-    when(organizationSearchClientMock.findByIpaCode(anyString(), eq(accessToken)))
+    when(organizationSearchClientMock.findByIpaCode(anyString()))
       .thenReturn(null);
 
-    Optional<Organization> result = organizationService.getOrganizationByIpaCode("ipaCode", accessToken);
+    Optional<Organization> result = organizationService.getOrganizationByIpaCode(
+      "ipaCode");
 
     assertTrue(result.isEmpty());
   }
 
   @Test
   void whenUpdateOrganizationThenInvokeClient() {
-    String accessToken = "accessToken";
     Organization expectedResult = new Organization();
 
-    when(organizationRequestMapperMock.map(expectedResult)).thenReturn(new OrganizationRequestBody());
-    when(organizationEntityClientMock.updateOrganization(anyString(), any(OrganizationRequestBody.class), eq(accessToken)))
+    when(organizationRequestMapperMock.map(expectedResult)).thenReturn(
+      new OrganizationRequestBody());
+    when(organizationEntityClientMock.updateOrganization(anyString(),
+      any(OrganizationRequestBody.class)))
       .thenReturn(expectedResult);
 
-    Organization result = organizationService.updateOrganization(expectedResult, accessToken);
+    Organization result = organizationService.updateOrganization(
+      expectedResult);
 
     assertEquals(expectedResult, result);
   }
 
   @Test
   void givenPresentOrganizationWhenGetOrganizationByExternalOrganizationIdThenReturnOrganization() {
-    String accessToken = "accessToken";
     Organization expectedResult = new Organization();
 
-    when(organizationSearchClientMock.findByExternalOrganizationId(anyString(), eq(accessToken)))
+    when(organizationSearchClientMock.findByExternalOrganizationId(anyString()))
       .thenReturn(expectedResult);
 
-    Optional<Organization> result = organizationService.getOrganizationByExternalOrganizationId("externalOrganizationId", accessToken);
+    Optional<Organization> result = organizationService.getOrganizationByExternalOrganizationId(
+      "externalOrganizationId");
 
     assertTrue(result.isPresent());
     assertEquals(expectedResult, result.get());
@@ -121,12 +123,11 @@ class OrganizationServiceTest {
 
   @Test
   void givenMissingOrganizationWhenGetOrganizationByExternalOrganizationIdThenReturnOptionalEmpty() {
-    String accessToken = "accessToken";
-
-    when(organizationSearchClientMock.findByExternalOrganizationId(anyString(), eq(accessToken)))
+    when(organizationSearchClientMock.findByExternalOrganizationId(anyString()))
       .thenReturn(null);
 
-    Optional<Organization> result = organizationService.getOrganizationByExternalOrganizationId("externalOrganizationId", accessToken);
+    Optional<Organization> result = organizationService.getOrganizationByExternalOrganizationId(
+      "externalOrganizationId");
 
     assertTrue(result.isEmpty());
   }

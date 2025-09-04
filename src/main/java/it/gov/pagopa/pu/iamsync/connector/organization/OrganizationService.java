@@ -6,11 +6,11 @@ import java.util.Optional;
 
 public interface OrganizationService {
 
-  void createOrganization(OrganizationCreateDTO organizationCreateDTO, String accessToken);
+  void createOrganization(OrganizationCreateDTO organizationCreateDTO);
 
-  Optional<Organization> getOrganizationByIpaCode(String ipaCode, String accessToken);
+  Optional<Organization> getOrganizationByIpaCode(String ipaCode);
 
-  Organization updateOrganization(Organization organization, String accessToken);
+  Organization updateOrganization(Organization organization);
 
-  Optional<Organization> getOrganizationByExternalOrganizationId(String externalOrganizationId, String accessToken);
+  Optional<Organization> getOrganizationByExternalOrganizationId(String externalOrganizationId);
 }

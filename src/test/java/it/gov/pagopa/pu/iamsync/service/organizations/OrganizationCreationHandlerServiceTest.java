@@ -1,8 +1,6 @@
 package it.gov.pagopa.pu.iamsync.service.organizations;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,7 +9,6 @@ import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
 import it.gov.pagopa.pu.iamsync.mapper.ScContractMapper;
-import it.gov.pagopa.pu.iamsync.utils.TestUtils;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationStatus;
@@ -39,6 +36,7 @@ class OrganizationCreationHandlerServiceTest {
   void setup() {
     organizationCreationHandlerService = new OrganizationCreationHandlerServiceImpl(
       organizationServiceMock, scContractMapperMock);
+
   }
 
   @AfterEach
@@ -55,8 +53,6 @@ class OrganizationCreationHandlerServiceTest {
    */
   @Test
   void givenEventStatusActiveAndPresentActiveOrganizationWhenCreateOrganizationThenOk() {
-    TestUtils.setFakeAccessTokenInContext();
-
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setState("ACTIVE");
 
@@ -68,16 +64,13 @@ class OrganizationCreationHandlerServiceTest {
     organization.setStatus(OrganizationStatus.ACTIVE);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
-      scContractEvent.getInstitution().getOriginId(),
-      TestUtils.getFakeAccessToken()))
+      scContractEvent.getInstitution().getOriginId()))
       .thenReturn(Optional.of(organization));
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
 
-    verify(organizationServiceMock, Mockito.never()).updateOrganization(any(),
-      anyString());
-    verify(organizationServiceMock, Mockito.never()).createOrganization(any(),
-      anyString());
+    verify(organizationServiceMock, Mockito.never()).updateOrganization(any());
+    verify(organizationServiceMock, Mockito.never()).createOrganization(any());
   }
 
   /**
@@ -87,8 +80,6 @@ class OrganizationCreationHandlerServiceTest {
    */
   @Test
   void givenEventStatusActiveAndPresentCancelledOrganizationWhenCreateOrganizationThenUpdateOrganizationStatusToDraft() {
-    TestUtils.setFakeAccessTokenInContext();
-
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setState("ACTIVE");
 
@@ -100,18 +91,15 @@ class OrganizationCreationHandlerServiceTest {
     organization.setStatus(OrganizationStatus.CANCELLED);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
-      scContractEvent.getInstitution().getOriginId(),
-      TestUtils.getFakeAccessToken()))
+      scContractEvent.getInstitution().getOriginId()))
       .thenReturn(Optional.of(organization));
 
-    when(organizationServiceMock.updateOrganization(organization,
-      TestUtils.getFakeAccessToken()))
+    when(organizationServiceMock.updateOrganization(organization))
       .thenReturn(organization);
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
 
-    verify(organizationServiceMock, Mockito.never()).createOrganization(any(),
-      anyString());
+    verify(organizationServiceMock, Mockito.never()).createOrganization(any());
   }
 
   /**
@@ -120,8 +108,6 @@ class OrganizationCreationHandlerServiceTest {
    */
   @Test
   void givenEventStatusActiveAndMissingOrganizationWhenCreateOrganizationThenCreateOrganization() {
-    TestUtils.setFakeAccessTokenInContext();
-
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setState("ACTIVE");
 
@@ -130,8 +116,7 @@ class OrganizationCreationHandlerServiceTest {
     scContractEvent.setInstitution(institution);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
-      scContractEvent.getInstitution().getOriginId(),
-      TestUtils.getFakeAccessToken()))
+      scContractEvent.getInstitution().getOriginId()))
       .thenReturn(Optional.empty());
 
     when(scContractMapperMock.mapToOrganizationCreateDTO(scContractEvent,
@@ -139,13 +124,11 @@ class OrganizationCreationHandlerServiceTest {
       .thenReturn(new OrganizationCreateDTO());
 
     doNothing().when(organizationServiceMock)
-      .createOrganization(any(OrganizationCreateDTO.class),
-        eq(TestUtils.getFakeAccessToken()));
+      .createOrganization(any(OrganizationCreateDTO.class));
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
 
-    verify(organizationServiceMock, Mockito.never()).updateOrganization(any(),
-      anyString());
+    verify(organizationServiceMock, Mockito.never()).updateOrganization(any());
   }
 
   /**
@@ -154,8 +137,6 @@ class OrganizationCreationHandlerServiceTest {
    */
   @Test
   void givenEventStatusCancelledAndPresentOrganizationWhenCreateOrganizationThenUpdateOrganizationStatusToCancelled() {
-    TestUtils.setFakeAccessTokenInContext();
-
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setState("CANCELLED");
 
@@ -167,13 +148,11 @@ class OrganizationCreationHandlerServiceTest {
     organization.setStatus(OrganizationStatus.ACTIVE);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
-      scContractEvent.getInstitution().getOriginId(),
-      TestUtils.getFakeAccessToken()))
+      scContractEvent.getInstitution().getOriginId()))
       .thenReturn(Optional.of(organization));
 
     organization.setStatus(OrganizationStatus.CANCELLED);
-    when(organizationServiceMock.updateOrganization(organization,
-      TestUtils.getFakeAccessToken()))
+    when(organizationServiceMock.updateOrganization(organization))
       .thenReturn(organization);
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
@@ -188,8 +167,6 @@ class OrganizationCreationHandlerServiceTest {
    */
   @Test
   void givenEventStatusCancelledAndMissingOrganizationWhenCreateOrganizationThenDoNothing() {
-    TestUtils.setFakeAccessTokenInContext();
-
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setState("CANCELLED");
 
@@ -198,16 +175,13 @@ class OrganizationCreationHandlerServiceTest {
     scContractEvent.setInstitution(institution);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
-      scContractEvent.getInstitution().getOriginId(),
-      TestUtils.getFakeAccessToken()))
+      scContractEvent.getInstitution().getOriginId()))
       .thenReturn(Optional.empty());
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
 
-    verify(organizationServiceMock, Mockito.never()).updateOrganization(any(),
-      anyString());
-    verify(organizationServiceMock, Mockito.never()).createOrganization(any(),
-      anyString());
+    verify(organizationServiceMock, Mockito.never()).updateOrganization(any());
+    verify(organizationServiceMock, Mockito.never()).createOrganization(any());
   }
 
 }
