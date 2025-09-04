@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
 import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
+import it.gov.pagopa.pu.iamsync.connector.auth.AuthnService;
 import it.gov.pagopa.pu.iamsync.connector.auth.AuthzService;
 import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
@@ -27,6 +28,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class OperatorCreationHandlerServiceTest {
 
   @Mock
+  private AuthnService authnServiceMock;
+  @Mock
   private AuthzService authzServiceMock;
   @Mock
   private OrganizationService organizationServiceMock;
@@ -38,7 +41,8 @@ class OperatorCreationHandlerServiceTest {
   @BeforeEach
   void setup() {
     operatorCreationHandlerService = new OperatorCreationHandlerServiceImpl(
-      authzServiceMock, organizationServiceMock, scUsersMapperMock);
+      authnServiceMock, authzServiceMock, organizationServiceMock,
+      scUsersMapperMock);
   }
 
   @AfterEach
@@ -85,7 +89,8 @@ class OperatorCreationHandlerServiceTest {
       scUsersEvent.getInstitutionId(),
       TestUtils.getFakeAccessToken())).thenReturn(Optional.empty());
 
-    Executable exec = () -> operatorCreationHandlerService.createOrganizationOperator(scUsersEvent);
+    Executable exec = () -> operatorCreationHandlerService.createOrganizationOperator(
+      scUsersEvent);
 
     assertThrows(ResourceNotFoundException.class, exec);
     Mockito.verifyNoInteractions(scUsersMapperMock, authzServiceMock);
