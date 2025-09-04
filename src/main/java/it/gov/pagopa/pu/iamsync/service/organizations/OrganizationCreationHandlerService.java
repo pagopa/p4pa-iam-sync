@@ -1,4 +1,4 @@
-package it.gov.pagopa.pu.iamsync.service;
+package it.gov.pagopa.pu.iamsync.service.organizations;
 
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 

@@ -2,17 +2,19 @@ package it.gov.pagopa.pu.iamsync.event.organizations;
 
 import static it.gov.pagopa.pu.iamsync.utils.Constants.PIATTAFORMA_UNITARIA_PRODUCT;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScRootAggregatorDTO;
-import it.gov.pagopa.pu.iamsync.service.OrganizationCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.organizations.OrganizationCreationHandlerService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +29,13 @@ class IamOrganizationsConsumerTest {
   void setup() {
     iamOrganizationsConsumer = new IamOrganizationsConsumer(
       organizationCreationHandlerServiceMock);
+  }
+
+  @AfterEach
+  void verifyNoMoreInteractions() {
+    Mockito.verifyNoMoreInteractions(
+      organizationCreationHandlerServiceMock
+    );
   }
 
   @Test
@@ -49,7 +58,6 @@ class IamOrganizationsConsumerTest {
     verifyNoInteractions(organizationCreationHandlerServiceMock);
   }
 
-
   @Test
   void givenValidScContractEventWhenAcceptThenHandleCreateOrganization() {
     ScContractDTO scContractEvent = buildBaseScContractEvent();
@@ -62,7 +70,7 @@ class IamOrganizationsConsumerTest {
 
     iamOrganizationsConsumer.accept(scContractEvent);
 
-    verifyNoMoreInteractions(organizationCreationHandlerServiceMock);
+    verify(organizationCreationHandlerServiceMock).createOrganization(scContractEvent);
   }
 
   private ScContractDTO buildBaseScContractEvent() {

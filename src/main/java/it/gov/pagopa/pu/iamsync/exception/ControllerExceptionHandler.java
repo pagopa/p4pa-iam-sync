@@ -2,11 +2,14 @@ package it.gov.pagopa.pu.iamsync.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO;
+import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO.CodeEnum;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.slf4j.event.Level;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -23,12 +26,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.stream.Collectors;
-
 @RestControllerAdvice
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ControllerExceptionHandler {
+
+  @ExceptionHandler({ResourceNotFoundException.class})
+  public ResponseEntity<ErrorDTO> handleNotFoundError(RuntimeException ex, HttpServletRequest request){
+    return handleException(ex, request, HttpStatus.NOT_FOUND, CodeEnum.NOT_FOUND);
+  }
 
   @ExceptionHandler({ValidationException.class, HttpMessageNotReadableException.class, MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
   public ResponseEntity<ErrorDTO> handleViolationException(Exception ex, HttpServletRequest request) {

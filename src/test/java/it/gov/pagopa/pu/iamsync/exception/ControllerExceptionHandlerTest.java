@@ -1,5 +1,8 @@
 package it.gov.pagopa.pu.iamsync.exception;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.pu.iamsync.config.json.JsonConfig;
 import jakarta.servlet.ServletException;
@@ -7,10 +10,14 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.junit.jupiter.api.Test;
@@ -33,13 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerErrorException;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Set;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 
 @ExtendWith({SpringExtension.class})
 @WebMvcTest(value = {ControllerExceptionHandlerTest.TestController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
@@ -109,6 +109,16 @@ class ControllerExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("BAD_REQUEST"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required request parameter 'data' for method parameter type String is not present"));
 
+    }
+
+    @Test
+    void handleResourceNotFoundExceptionError() throws Exception {
+      doThrow(new ResourceNotFoundException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
+
+      performRequest(DATA, MediaType.APPLICATION_JSON)
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("NOT_FOUND"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
     @Test

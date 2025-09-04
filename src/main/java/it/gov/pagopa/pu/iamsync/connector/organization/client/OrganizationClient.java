@@ -1,5 +1,6 @@
 package it.gov.pagopa.pu.iamsync.connector.organization.client;
 
+import it.gov.pagopa.pu.iamsync.connector.auth.AuthnService;
 import it.gov.pagopa.pu.iamsync.connector.organization.config.OrganizationApisHolder;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import org.springframework.stereotype.Service;
@@ -8,13 +9,16 @@ import org.springframework.stereotype.Service;
 public class OrganizationClient {
 
   private final OrganizationApisHolder organizationApisHolder;
+  private final AuthnService authnService;
 
-  public OrganizationClient(OrganizationApisHolder organizationApisHolder) {
+  public OrganizationClient(OrganizationApisHolder organizationApisHolder,
+    AuthnService authnService) {
     this.organizationApisHolder = organizationApisHolder;
+    this.authnService = authnService;
   }
 
-  public void createOrganization(OrganizationCreateDTO organizationCreateDTO, String accessToken) {
-    organizationApisHolder.getOrganizationApi(accessToken)
+  public void createOrganization(OrganizationCreateDTO organizationCreateDTO) {
+    organizationApisHolder.getOrganizationApi(authnService.getAccessToken())
       .createOrganization(organizationCreateDTO);
   }
 }

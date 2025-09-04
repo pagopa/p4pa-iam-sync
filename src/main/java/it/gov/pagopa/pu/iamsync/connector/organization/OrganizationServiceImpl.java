@@ -1,9 +1,9 @@
-package it.gov.pagopa.pu.iamsync.connector.organization.service;
+package it.gov.pagopa.pu.iamsync.connector.organization;
 
-import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationRequestMapper;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationEntityClient;
 import it.gov.pagopa.pu.iamsync.connector.organization.client.OrganizationSearchClient;
+import it.gov.pagopa.pu.iamsync.connector.organization.mapper.OrganizationRequestMapper;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import java.util.Optional;
@@ -28,22 +28,29 @@ public class OrganizationServiceImpl implements OrganizationService {
   }
 
   @Override
-  public void createOrganization(OrganizationCreateDTO organizationCreateDTO, String accessToken) {
-    organizationClient.createOrganization(organizationCreateDTO, accessToken);
+  public void createOrganization(OrganizationCreateDTO organizationCreateDTO) {
+    organizationClient.createOrganization(organizationCreateDTO);
   }
 
   @Override
-  public Optional<Organization> getOrganizationByIpaCode(String ipaCode, String accessToken) {
+  public Optional<Organization> getOrganizationByIpaCode(String ipaCode) {
     return Optional.ofNullable(
-      organizationSearchClient.findByIpaCode(ipaCode, accessToken)
+      organizationSearchClient.findByIpaCode(ipaCode)
     );
   }
 
   @Override
-  public Organization updateOrganization(Organization organization, String accessToken) {
+  public Organization updateOrganization(Organization organization) {
     return organizationEntityClient.updateOrganization(
       String.valueOf(organization.getOrganizationId()),
-      organizationRequestMapper.map(organization),
-      accessToken);
+      organizationRequestMapper.map(organization));
+  }
+
+  @Override
+  public Optional<Organization> getOrganizationByExternalOrganizationId(
+    String externalOrganizationId) {
+    return Optional.ofNullable(
+      organizationSearchClient.findByExternalOrganizationId(
+        externalOrganizationId));
   }
 }

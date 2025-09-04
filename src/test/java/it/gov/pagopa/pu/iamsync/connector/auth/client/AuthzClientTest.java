@@ -1,6 +1,11 @@
 package it.gov.pagopa.pu.iamsync.connector.auth.client;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import it.gov.pagopa.pu.auth.controller.generated.AuthzApi;
+import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
+import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
 import it.gov.pagopa.pu.auth.dto.generated.UserInfo;
 import it.gov.pagopa.pu.iamsync.connector.auth.config.AuthApisHolder;
 import org.junit.jupiter.api.AfterEach;
@@ -17,59 +22,79 @@ import org.springframework.web.client.HttpClientErrorException;
 @ExtendWith(MockitoExtension.class)
 class AuthzClientTest {
 
-    @Mock
-    private AuthApisHolder authApisHolderMock;
-    @Mock
-    private AuthzApi authzApiMock;
+  @Mock
+  private AuthApisHolder authApisHolderMock;
+  @Mock
+  private AuthzApi authzApiMock;
 
-    private AuthzClient authzClient;
+  private AuthzClient authzClient;
 
-    @BeforeEach
-    void setUp() {
-        authzClient = new AuthzClient(authApisHolderMock);
-    }
+  @BeforeEach
+  void setUp() {
+    authzClient = new AuthzClient(authApisHolderMock);
+  }
 
-    @AfterEach
-    void verifyNoMoreInteractions(){
-        Mockito.verifyNoMoreInteractions(
-                authApisHolderMock
-        );
-    }
+  @AfterEach
+  void verifyNoMoreInteractions() {
+    Mockito.verifyNoMoreInteractions(
+      authApisHolderMock
+    );
+  }
 
-    @Test
-    void whenGetOperatorInfoThenInvokeWithAccessToken(){
-        // Given
-        UserInfo expectedResult = new UserInfo();
-        String accessToken = "accessToken";
-        String externalUserId = "externalUserId";
+  @Test
+  void whenGetOperatorInfoThenInvokeWithAccessToken() {
+    // Given
+    UserInfo expectedResult = new UserInfo();
+    String accessToken = "accessToken";
+    String externalUserId = "externalUserId";
 
-        Mockito.when(authApisHolderMock.getAuthzApi(accessToken))
-                .thenReturn(authzApiMock);
-        Mockito.when(authzApiMock.getUserInfoFromMappedExternaUserId(externalUserId))
-                .thenReturn(expectedResult);
+    Mockito.when(authApisHolderMock.getAuthzApi(accessToken))
+      .thenReturn(authzApiMock);
+    Mockito.when(
+        authzApiMock.getUserInfoFromMappedExternaUserId(externalUserId))
+      .thenReturn(expectedResult);
 
-        // When
-        UserInfo result = authzClient.getOperatorInfo(externalUserId, accessToken);
+    // When
+    UserInfo result = authzClient.getOperatorInfo(externalUserId, accessToken);
 
-        // Then
-        Assertions.assertSame(expectedResult, result);
-    }
+    // Then
+    Assertions.assertSame(expectedResult, result);
+  }
 
-    @Test
-    void givenNotExistentUsedWhenGetOperatorInfoThenNull(){
-        // Given
-        String accessToken = "accessToken";
-        String externalUserId = "externalUserId";
+  @Test
+  void givenNotExistentUsedWhenGetOperatorInfoThenNull() {
+    // Given
+    String accessToken = "accessToken";
+    String externalUserId = "externalUserId";
 
-        Mockito.when(authApisHolderMock.getAuthzApi(accessToken))
-                .thenReturn(authzApiMock);
-        Mockito.when(authzApiMock.getUserInfoFromMappedExternaUserId(externalUserId))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+    Mockito.when(authApisHolderMock.getAuthzApi(accessToken))
+      .thenReturn(authzApiMock);
+    Mockito.when(
+        authzApiMock.getUserInfoFromMappedExternaUserId(externalUserId))
+      .thenThrow(
+        HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null,
+          null, null));
 
-        // When
-        UserInfo result = authzClient.getOperatorInfo(externalUserId, accessToken);
+    // When
+    UserInfo result = authzClient.getOperatorInfo(externalUserId, accessToken);
 
-        // Then
-        Assertions.assertNull(result);
-    }
+    // Then
+    Assertions.assertNull(result);
+  }
+
+  @Test
+  void whenCreateOrganizationOperatorThenInvokeWithAccessToken() {
+    String accessToken = "accessToken";
+    OperatorDTO expected = new OperatorDTO();
+
+    Mockito.when(authApisHolderMock.getAuthzApi(accessToken))
+      .thenReturn(authzApiMock);
+    Mockito.when(authzApiMock.createOrganizationOperator(anyString(),
+      any(CreateOperatorRequest.class))).thenReturn(expected);
+
+    OperatorDTO result = authzClient.createOrganizationOperator("ipaCode",
+      new CreateOperatorRequest(), accessToken);
+
+    Assertions.assertSame(expected, result);
+  }
 }

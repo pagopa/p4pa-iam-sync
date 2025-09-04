@@ -1,5 +1,7 @@
 package it.gov.pagopa.pu.iamsync.connector.auth.client;
 
+import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
+import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
 import it.gov.pagopa.pu.auth.dto.generated.UserInfo;
 import it.gov.pagopa.pu.iamsync.connector.auth.config.AuthApisHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -26,5 +28,10 @@ public class AuthzClient {
             log.info("Cannot find User having externalUserId {}", mappedExternalUserId);
             return null;
         }
+    }
+
+    public OperatorDTO createOrganizationOperator(String organizationIpaCode, CreateOperatorRequest createOperatorRequest, String accessToken) {
+      return authApisHolder.getAuthzApi(accessToken)
+        .createOrganizationOperator(organizationIpaCode, createOperatorRequest);
     }
 }
