@@ -1,0 +1,14 @@
+package it.gov.pagopa.pu.iamsync.utils;
+
+import java.time.ZoneId;
+
+public class Constants {
+
+  private Constants(){}
+
+  public static final ZoneId ZONEID = ZoneId.of("Europe/Rome");
+
+  public static final String PIATTAFORMA_UNITARIA_PRODUCT = "PROD-PIATTAFORMA-UNITARIA";
+
+}
+
