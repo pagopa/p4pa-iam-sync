@@ -24,7 +24,7 @@ public class OrganizationCreationHandlerServiceImpl implements OrganizationCreat
           organization -> {
             if (OrganizationStatus.CANCELLED.equals(organization.getStatus())) {
               organization.setStatus(OrganizationStatus.DRAFT);
-              organizationService.updateOrganization(organization);
+              organizationService.updateOrganizationStatus(organization.getOrganizationId(), OrganizationStatus.DRAFT);
             }
           },
           () -> organizationService.createOrganization(
@@ -36,8 +36,8 @@ public class OrganizationCreationHandlerServiceImpl implements OrganizationCreat
     if (OrganizationStatus.CANCELLED.getValue().equals(scContractEvent.getState())) {
       organizationService.getOrganizationByIpaCode(scContractEvent.getInstitution().getOriginId())
         .ifPresent(organization -> {
-              organization.setStatus(OrganizationStatus.CANCELLED);
-              organizationService.updateOrganization(organization);
+          organization.setStatus(OrganizationStatus.CANCELLED);
+          organizationService.updateOrganizationStatus(organization.getOrganizationId(), OrganizationStatus.CANCELLED);
         });
     }
   }

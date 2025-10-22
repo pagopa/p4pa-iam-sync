@@ -41,11 +41,9 @@ class OrganizationApisHolderTest extends BaseApiHolderTest {
     @Test
     void whenGetOrganizationApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
       assertAuthenticationShouldBeSetInThreadSafeMode(
-        accessToken -> {
+        accessToken ->
           organizationApisHolder.getOrganizationApi(accessToken)
-            .createOrganization(new OrganizationCreateDTO());
-          return voidMock;
-        },
+            .createOrganization(new OrganizationCreateDTO()),
         new ParameterizedTypeReference<>() {},
         organizationApisHolder::unload);
     }

@@ -1,10 +1,5 @@
 package it.gov.pagopa.pu.iamsync.service.organizations;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
@@ -12,7 +7,6 @@ import it.gov.pagopa.pu.iamsync.mapper.ScContractMapper;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationCreateDTO;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationStatus;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrganizationCreationHandlerServiceTest {
@@ -68,9 +67,6 @@ class OrganizationCreationHandlerServiceTest {
       .thenReturn(Optional.of(organization));
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
-
-    verify(organizationServiceMock, Mockito.never()).updateOrganization(any());
-    verify(organizationServiceMock, Mockito.never()).createOrganization(any());
   }
 
   /**
@@ -88,18 +84,17 @@ class OrganizationCreationHandlerServiceTest {
     scContractEvent.setInstitution(institution);
 
     Organization organization = new Organization();
+    organization.setOrganizationId(1L);
     organization.setStatus(OrganizationStatus.CANCELLED);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
       scContractEvent.getInstitution().getOriginId()))
       .thenReturn(Optional.of(organization));
 
-    when(organizationServiceMock.updateOrganization(organization))
-      .thenReturn(organization);
-
     organizationCreationHandlerService.createOrganization(scContractEvent);
 
-    verify(organizationServiceMock, Mockito.never()).createOrganization(any());
+    verify(organizationServiceMock)
+      .updateOrganizationStatus(organization.getOrganizationId(), organization.getStatus());
   }
 
   /**
@@ -127,8 +122,6 @@ class OrganizationCreationHandlerServiceTest {
       .createOrganization(any(OrganizationCreateDTO.class));
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
-
-    verify(organizationServiceMock, Mockito.never()).updateOrganization(any());
   }
 
   /**
@@ -145,6 +138,7 @@ class OrganizationCreationHandlerServiceTest {
     scContractEvent.setInstitution(institution);
 
     Organization organization = new Organization();
+    organization.setOrganizationId(1L);
     organization.setStatus(OrganizationStatus.ACTIVE);
 
     when(organizationServiceMock.getOrganizationByIpaCode(
@@ -152,13 +146,11 @@ class OrganizationCreationHandlerServiceTest {
       .thenReturn(Optional.of(organization));
 
     organization.setStatus(OrganizationStatus.CANCELLED);
-    when(organizationServiceMock.updateOrganization(organization))
-      .thenReturn(organization);
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
 
-    Mockito.verifyNoMoreInteractions(organizationServiceMock);
-    Mockito.verifyNoInteractions(scContractMapperMock);
+    verify(organizationServiceMock)
+      .updateOrganizationStatus(organization.getOrganizationId(), organization.getStatus());
   }
 
   /**
@@ -179,9 +171,6 @@ class OrganizationCreationHandlerServiceTest {
       .thenReturn(Optional.empty());
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
-
-    verify(organizationServiceMock, Mockito.never()).updateOrganization(any());
-    verify(organizationServiceMock, Mockito.never()).createOrganization(any());
   }
 
 }
