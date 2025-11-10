@@ -1,6 +1,8 @@
 import org.gradle.kotlin.dsl.register
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 import java.util.Objects
+import com.github.jk1.license.render.*
+import com.github.jk1.license.filter.*
 
 plugins {
   java
@@ -12,6 +14,7 @@ plugins {
   id("org.openapi.generator") version "7.15.0"
   id("org.ajoberstar.grgit") version "5.3.2"
   id("com.gorylenko.gradle-git-properties") version "2.5.3"
+  id("com.github.jk1.dependency-license-report") version "3.0.1"
 }
 
 group = "it.gov.pagopa.payhub"
@@ -28,6 +31,18 @@ configurations {
   compileOnly {
     extendsFrom(configurations.annotationProcessor.get())
   }
+  compileClasspath {
+    resolutionStrategy.activateDependencyLocking()
+  }
+}
+
+licenseReport {
+  renderers = arrayOf(XmlReportRenderer("third-party-libs.xml", "Back-End Libraries"))
+  outputDir = "$projectDir/dependency-licenses"
+  filters = arrayOf(SpdxLicenseBundleNormalizer())
+}
+tasks.classes {
+  finalizedBy(tasks.generateLicenseReport)
 }
 
 repositories {
@@ -42,6 +57,7 @@ val httpClientVersion = "5.5"
 val bouncycastleVersion = "1.82"
 val springWolfAsyncApiVersion = "1.16.0"
 val mapStructVersion = "1.6.3"
+val commonsLang3Version = "3.19.0"
 val springCloudDepsVersion = "2025.0.0"
 
 dependencyManagement {
@@ -57,7 +73,10 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
   implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}")
+  implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}") {
+    exclude(group = "org.apache.commons", module = "commons-lang3")
+  }
+  implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
   implementation("org.codehaus.janino:janino:$janinoVersion")
   implementation ("io.github.springwolf:springwolf-kafka:${springWolfAsyncApiVersion}")
   implementation("io.github.springwolf:springwolf-ui:${springWolfAsyncApiVersion}")
@@ -118,12 +137,6 @@ tasks {
     filesMatching("**/application.yml") {
       expand(projectInfo)
     }
-  }
-}
-
-configurations {
-  compileClasspath {
-    resolutionStrategy.activateDependencyLocking()
   }
 }
 
