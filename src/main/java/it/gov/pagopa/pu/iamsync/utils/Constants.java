@@ -10,5 +10,8 @@ public class Constants {
 
   public static final String PIATTAFORMA_UNITARIA_PRODUCT = "PROD-PIATTAFORMA-UNITARIA";
 
+  public static final String SC_CONTRACT_ACTIVE_STATE = "ACTIVE";
+
+  public static final String SC_CONTRACT_CLOSED_STATE = "CLOSED";
 }
 
