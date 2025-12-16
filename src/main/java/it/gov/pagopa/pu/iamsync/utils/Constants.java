@@ -8,7 +8,7 @@ public class Constants {
 
   public static final ZoneId ZONEID = ZoneId.of("Europe/Rome");
 
-  public static final String PIATTAFORMA_UNITARIA_PRODUCT = "PROD-PIATTAFORMA-UNITARIA";
+  public static final String PIATTAFORMA_UNITARIA_PRODUCT = "prod-piattaforma-unitaria";
 
   public static final String SC_CONTRACT_ACTIVE_STATE = "ACTIVE";
 
