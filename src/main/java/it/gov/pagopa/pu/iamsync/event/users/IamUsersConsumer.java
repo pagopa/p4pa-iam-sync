@@ -27,6 +27,8 @@ public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
       scUsersNotificationEvent.getEventType()
     );
 
+    log.info("relStatus: {}", scUsersNotificationEvent.getUser().getRelationshipStatus());
+
     if (!PIATTAFORMA_UNITARIA_PRODUCT.equals(scUsersNotificationEvent.getProductId())) {
       log.info("Discarding event due to not matching product");
       return;
