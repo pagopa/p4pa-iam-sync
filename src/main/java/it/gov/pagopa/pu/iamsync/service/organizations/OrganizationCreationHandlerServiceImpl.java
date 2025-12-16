@@ -7,6 +7,9 @@ import it.gov.pagopa.pu.organization.dto.generated.OrganizationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static it.gov.pagopa.pu.iamsync.utils.Constants.SC_CONTRACT_ACTIVE_STATE;
+import static it.gov.pagopa.pu.iamsync.utils.Constants.SC_CONTRACT_CLOSED_STATE;
+
 @Service
 @RequiredArgsConstructor
 public class OrganizationCreationHandlerServiceImpl implements OrganizationCreationHandlerService {
@@ -16,8 +19,7 @@ public class OrganizationCreationHandlerServiceImpl implements OrganizationCreat
 
   @Override
   public void createOrganization(ScContractDTO scContractEvent) {
-    if (OrganizationStatus.ACTIVE.getValue()
-      .equals(scContractEvent.getState())) {
+    if (SC_CONTRACT_ACTIVE_STATE.equals(scContractEvent.getState())) {
       organizationService.getOrganizationByIpaCode(
           scContractEvent.getInstitution().getOriginId())
         .ifPresentOrElse(
@@ -33,7 +35,7 @@ public class OrganizationCreationHandlerServiceImpl implements OrganizationCreat
         );
     }
 
-    if (OrganizationStatus.CANCELLED.getValue().equals(scContractEvent.getState())) {
+    if (SC_CONTRACT_CLOSED_STATE.equals(scContractEvent.getState())) {
       organizationService.getOrganizationByIpaCode(scContractEvent.getInstitution().getOriginId())
         .ifPresent(organization -> {
           organization.setStatus(OrganizationStatus.CANCELLED);
