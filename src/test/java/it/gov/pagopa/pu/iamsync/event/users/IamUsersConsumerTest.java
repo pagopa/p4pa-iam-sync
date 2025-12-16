@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
+import it.gov.pagopa.pu.iamsync.connector.auth.AuthzServiceImpl;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO.ScUsersDTO;
 import it.gov.pagopa.pu.iamsync.service.users.OperatorCreationHandlerService;
@@ -21,12 +22,14 @@ class IamUsersConsumerTest {
 
   @Mock
   private OperatorCreationHandlerService operatorCreationHandlerServiceMock;
+  @Mock
+  private AuthzServiceImpl authzServiceImplMock;
 
   private IamUsersConsumer iamUsersConsumer;
 
   @BeforeEach
   void setup() {
-    iamUsersConsumer = new IamUsersConsumer(operatorCreationHandlerServiceMock);
+    iamUsersConsumer = new IamUsersConsumer(operatorCreationHandlerServiceMock, authzServiceImplMock);
   }
 
   @AfterEach
