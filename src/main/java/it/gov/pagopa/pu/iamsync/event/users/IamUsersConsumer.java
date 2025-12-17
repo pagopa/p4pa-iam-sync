@@ -44,8 +44,8 @@ public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
     // TODO: remove following log, it's only for test purpose
     log.info("userId: {}", userInfo != null ? userInfo.getUserId() : null);
 
-    if (EventType.ADD.name().equals(eventType) /* || */
-      /* (EventType.UPDATE.name().equals(eventType) && SC_USER_ACTIVE_RELATIONSHIP_STATUS.equals(relationshipStatus)) */) {
+    if (userInfo == null && (
+      EventType.ADD.name().equals(eventType) || (EventType.UPDATE.name().equals(eventType) && SC_USER_ACTIVE_RELATIONSHIP_STATUS.equals(relationshipStatus)))) {
       operatorCreationHandlerService.createOrganizationOperator(scUsersNotificationEvent);
       return;
     }
