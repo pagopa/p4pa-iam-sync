@@ -29,4 +29,13 @@ public class AuthzServiceImpl implements AuthzService {
     return authzClient.createOrganizationOperator(organizationIpaCode,
       createOperatorRequest, authnService.getAccessToken(organizationIpaCode));
   }
+
+  @Override
+  public void deleteOrganizationOperatorByExternalUserId(String organizationIpaCode, String externalUserId) {
+    authzClient.deleteOrganizationOperatorByExternalUserId(
+      organizationIpaCode,
+      externalUserId,
+      authnService.getAccessToken(organizationIpaCode)
+    );
+  }
 }

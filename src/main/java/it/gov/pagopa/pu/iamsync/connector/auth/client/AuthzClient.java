@@ -34,4 +34,9 @@ public class AuthzClient {
       return authApisHolder.getAuthzApi(accessToken)
         .createOrganizationOperator(organizationIpaCode, createOperatorRequest);
     }
+
+    public void deleteOrganizationOperatorByExternalUserId(String organizationIpaCode, String externalUserId, String accessToken) {
+      authApisHolder.getAuthzApi(accessToken)
+        .deleteOrganizationOperatorByExternalUserId(organizationIpaCode, externalUserId);
+    }
 }

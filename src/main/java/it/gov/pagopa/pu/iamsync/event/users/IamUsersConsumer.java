@@ -3,6 +3,7 @@ package it.gov.pagopa.pu.iamsync.event.users;
 import it.gov.pagopa.pu.iamsync.enums.EventType;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
 import it.gov.pagopa.pu.iamsync.service.users.OperatorCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.users.OperatorDeletionHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import static it.gov.pagopa.pu.iamsync.utils.Constants.*;
 public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
 
   private final OperatorCreationHandlerService operatorCreationHandlerService;
+  private final OperatorDeletionHandlerService operatorDeletionHandlerService;
 
   @Override
   public void accept(ScUsersNotificationDTO scUsersNotificationEvent) {
@@ -42,7 +44,7 @@ public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
     }
 
     if (EventType.UPDATE.name().equals(eventType) && SC_USER_DELETED_RELATIONSHIP_STATUS.equals(relationshipStatus)) {
-      // TODO: delete operator
+      operatorDeletionHandlerService.deleteOrganizationOperatorByExternalUserId(scUsersNotificationEvent);
     }
   }
 

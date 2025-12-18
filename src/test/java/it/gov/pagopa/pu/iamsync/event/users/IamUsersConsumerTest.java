@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO.ScUsersDTO;
 import it.gov.pagopa.pu.iamsync.service.users.OperatorCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.users.OperatorDeletionHandlerService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +23,14 @@ class IamUsersConsumerTest {
   @Mock
   private OperatorCreationHandlerService operatorCreationHandlerServiceMock;
 
+  @Mock
+  private OperatorDeletionHandlerService operatorDeletionHandlerService;
+
   private IamUsersConsumer iamUsersConsumer;
 
   @BeforeEach
   void setup() {
-    iamUsersConsumer = new IamUsersConsumer(operatorCreationHandlerServiceMock);
+    iamUsersConsumer = new IamUsersConsumer(operatorCreationHandlerServiceMock, operatorDeletionHandlerService);
   }
 
   @AfterEach
