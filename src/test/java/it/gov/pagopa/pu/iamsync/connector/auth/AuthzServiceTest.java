@@ -61,13 +61,14 @@ class AuthzServiceTest {
   void whenCreateOrganizationOperatorThenCallAuthzClient() {
     OperatorDTO expected = new OperatorDTO();
     String accessToken = "accessToken";
+    String organizationIpaCode = "ipaCode";
 
-    Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-    Mockito.when(authzClientMock.createOrganizationOperator(anyString(), any(
+    Mockito.when(authnServiceMock.getAccessToken(organizationIpaCode)).thenReturn(accessToken);
+    Mockito.when(authzClientMock.createOrganizationOperator(eq(organizationIpaCode), any(
         CreateOperatorRequest.class), eq(accessToken)))
       .thenReturn(expected);
 
-    OperatorDTO result = authzService.createOrganizationOperator("ipaCode",
+    OperatorDTO result = authzService.createOrganizationOperator(organizationIpaCode,
       new CreateOperatorRequest());
 
     Assertions.assertSame(expected, result);
