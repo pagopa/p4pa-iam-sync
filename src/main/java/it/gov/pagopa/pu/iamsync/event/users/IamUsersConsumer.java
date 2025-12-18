@@ -44,7 +44,7 @@ public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
     }
 
     if (EventType.UPDATE.name().equals(eventType) && SC_USER_DELETED_RELATIONSHIP_STATUS.equals(relationshipStatus)) {
-      operatorDeletionHandlerService.deleteOrganizationOperatorByExternalUserId(scUsersNotificationEvent);
+      operatorDeletionHandlerService.deleteOrganizationOperator(scUsersNotificationEvent);
     }
   }
 

@@ -54,10 +54,11 @@ class IamUsersConsumerTest {
   void givenEventTypeUpdateWhenAcceptThenUpdateOperator() {
     ScUsersNotificationDTO scUsersEvent = buildBaseScUsersEvent();
     scUsersEvent.setEventType("UPDATE");
+    scUsersEvent.getUser().setRelationshipStatus("ACTIVE");
 
     iamUsersConsumer.accept(scUsersEvent);
 
-    verifyNoInteractions(operatorCreationHandlerServiceMock);
+    verify(operatorCreationHandlerServiceMock).createOrganizationOperator(scUsersEvent);
   }
 
   @Test
@@ -70,6 +71,17 @@ class IamUsersConsumerTest {
     iamUsersConsumer.accept(scUsersEvent);
 
     verify(operatorCreationHandlerServiceMock).createOrganizationOperator(scUsersEvent);
+  }
+
+  @Test
+  void givenEventTypeDeleteWhenAcceptThenDeleteOperator() {
+    ScUsersNotificationDTO scUsersEvent = buildBaseScUsersEvent();
+    scUsersEvent.setEventType("UPDATE");
+    scUsersEvent.getUser().setRelationshipStatus("DELETED");
+
+    iamUsersConsumer.accept(scUsersEvent);
+
+    verify(operatorDeletionHandlerService).deleteOrganizationOperator(scUsersEvent);
   }
 
   private ScUsersNotificationDTO buildBaseScUsersEvent() {

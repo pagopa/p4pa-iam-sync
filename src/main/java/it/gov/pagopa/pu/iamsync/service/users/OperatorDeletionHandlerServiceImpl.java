@@ -18,7 +18,7 @@ public class OperatorDeletionHandlerServiceImpl implements OperatorDeletionHandl
   }
 
   @Override
-  public void deleteOrganizationOperatorByExternalUserId(ScUsersNotificationDTO scUsersEvent) {
+  public void deleteOrganizationOperator(ScUsersNotificationDTO scUsersEvent) {
     Organization organization = organizationService.getOrganizationByExternalOrganizationId(
         scUsersEvent.getInstitutionId())
       .orElseThrow(() -> new ResourceNotFoundException(
