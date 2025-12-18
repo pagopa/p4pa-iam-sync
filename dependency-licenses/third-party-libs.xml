@@ -471,11 +471,6 @@
 <td><a href='http://creativecommons.org/publicdomain/zero/1.0/'>Public-Domain</a></td>
 </tr>
 <tr>
-<td><a href='https://github.com/lz4/lz4-java'>org.lz4:lz4-java</a></td>
-<td>1.8.0</td>
-<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
-</tr>
-<tr>
 <td><a href='https://mapstruct.org/mapstruct/'>org.mapstruct:mapstruct</a></td>
 <td>1.6.3</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
@@ -783,6 +778,11 @@
 <tr>
 <td><a href='https://projects.spring.io/spring-cloud'>org.springframework.cloud:spring-cloud-stream-binder-kafka-core</a></td>
 <td>5.0.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td><a href='https://spring.io/projects/spring-data'>org.springframework.data:spring-data-commons</a></td>
+<td>4.0.0</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
 <tr>
