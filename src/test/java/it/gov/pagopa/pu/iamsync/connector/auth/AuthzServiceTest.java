@@ -73,4 +73,19 @@ class AuthzServiceTest {
 
     Assertions.assertSame(expected, result);
   }
+
+  @Test
+  void whenDeleteOrganizationOperatorByExternalUserIdThenCallAuthzClient() {
+    String accessToken = "accessToken";
+    String organizationIpaCode = "ipaCode";
+    String externalUserId = "externalUserId";
+
+    Mockito.when(authnServiceMock.getAccessToken(organizationIpaCode)).thenReturn(accessToken);
+
+    authzService.deleteOrganizationOperatorByExternalUserId(organizationIpaCode,
+      externalUserId);
+
+    Mockito.verify(authzClientMock)
+      .deleteOrganizationOperatorByExternalUserId(organizationIpaCode, externalUserId, accessToken);
+  }
 }
