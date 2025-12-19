@@ -1,7 +1,6 @@
 package it.gov.pagopa.pu.iamsync.service.users;
 
 
-import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
 import it.gov.pagopa.pu.iamsync.connector.auth.AuthzService;
 import it.gov.pagopa.pu.iamsync.connector.organization.OrganizationService;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;

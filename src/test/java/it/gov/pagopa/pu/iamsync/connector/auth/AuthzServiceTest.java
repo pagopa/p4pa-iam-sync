@@ -1,7 +1,6 @@
 package it.gov.pagopa.pu.iamsync.connector.auth;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
 import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
