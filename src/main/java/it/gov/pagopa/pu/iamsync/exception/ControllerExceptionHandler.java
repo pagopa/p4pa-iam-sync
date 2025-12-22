@@ -1,6 +1,5 @@
 package it.gov.pagopa.pu.iamsync.exception;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO;
 import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO.CodeEnum;
 import it.gov.pagopa.pu.iamsync.utils.Utilities;
@@ -8,7 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.slf4j.event.Level;
@@ -26,6 +24,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DatabindException;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -92,10 +94,10 @@ public class ControllerExceptionHandler {
   private static String buildReturnedMessage(Exception ex) {
     switch (ex) {
       case HttpMessageNotReadableException httpMessageNotReadableException -> {
-        if (httpMessageNotReadableException.getCause() instanceof JsonMappingException jsonMappingException) {
+        if (httpMessageNotReadableException.getCause() instanceof DatabindException jsonMappingException) {
           return "Cannot parse body. " +
             jsonMappingException.getPath().stream()
-              .map(JsonMappingException.Reference::getFieldName)
+              .map(JacksonException.Reference::getPropertyName)
               .collect(Collectors.joining(".")) +
             ": " + jsonMappingException.getOriginalMessage();
         }
