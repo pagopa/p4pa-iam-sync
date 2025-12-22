@@ -5,7 +5,17 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
+import java.util.TimeZone;
+
 public class TestUtils {
+
+  static {
+    clearDefaultTimezone();
+  }
+
+  public static void clearDefaultTimezone() {
+    TimeZone.setDefault(Constants.DEFAULT_TIMEZONE);
+  }
 
   private static final String ACCESS_TOKEN = "TOKENHEADER.TOKENPAYLOAD.TOKENDIGEST";
 
@@ -13,7 +23,7 @@ public class TestUtils {
     return ACCESS_TOKEN;
   }
 
-  public static void setFakeAccessTokenInContext(){
+  public static void setFakeAccessTokenInContext() {
     SecurityContextHolder.setContext(new SecurityContextImpl(new JwtAuthenticationToken(
       Jwt
         .withTokenValue(ACCESS_TOKEN)
