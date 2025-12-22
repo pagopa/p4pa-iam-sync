@@ -27,6 +27,15 @@ public class AuthzServiceImpl implements AuthzService {
   public OperatorDTO createOrganizationOperator(String organizationIpaCode,
     CreateOperatorRequest createOperatorRequest) {
     return authzClient.createOrganizationOperator(organizationIpaCode,
-      createOperatorRequest, authnService.getAccessToken());
+      createOperatorRequest, authnService.getAccessToken(organizationIpaCode));
+  }
+
+  @Override
+  public void deleteOrganizationOperatorByExternalUserId(String organizationIpaCode, String externalUserId) {
+    authzClient.deleteOrganizationOperatorByExternalUserId(
+      organizationIpaCode,
+      externalUserId,
+      authnService.getAccessToken(organizationIpaCode)
+    );
   }
 }

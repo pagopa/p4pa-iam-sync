@@ -8,4 +8,6 @@ public interface AuthzService {
     UserInfo getOperatorInfo(String mappedExternalUserId);
 
     OperatorDTO createOrganizationOperator(String organizationIpaCode, CreateOperatorRequest createOperatorRequest);
+
+    void deleteOrganizationOperatorByExternalUserId(String organizationIpaCode, String externalUserId);
 }

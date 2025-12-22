@@ -15,5 +15,9 @@ public class Constants {
   public static final String SC_CONTRACT_ACTIVE_STATE = "ACTIVE";
 
   public static final String SC_CONTRACT_CLOSED_STATE = "CLOSED";
+
+  public static final String SC_USER_ACTIVE_RELATIONSHIP_STATUS = "ACTIVE";
+
+  public static final String SC_USER_DELETED_RELATIONSHIP_STATUS = "DELETED";
 }
 

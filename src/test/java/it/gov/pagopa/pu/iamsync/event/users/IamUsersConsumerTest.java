@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO;
 import it.gov.pagopa.pu.iamsync.event.users.dto.ScUsersNotificationDTO.ScUsersDTO;
 import it.gov.pagopa.pu.iamsync.service.users.OperatorCreationHandlerService;
+import it.gov.pagopa.pu.iamsync.service.users.OperatorDeletionHandlerService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +23,14 @@ class IamUsersConsumerTest {
   @Mock
   private OperatorCreationHandlerService operatorCreationHandlerServiceMock;
 
+  @Mock
+  private OperatorDeletionHandlerService operatorDeletionHandlerService;
+
   private IamUsersConsumer iamUsersConsumer;
 
   @BeforeEach
   void setup() {
-    iamUsersConsumer = new IamUsersConsumer(operatorCreationHandlerServiceMock);
+    iamUsersConsumer = new IamUsersConsumer(operatorCreationHandlerServiceMock, operatorDeletionHandlerService);
   }
 
   @AfterEach
@@ -50,10 +54,11 @@ class IamUsersConsumerTest {
   void givenEventTypeUpdateWhenAcceptThenUpdateOperator() {
     ScUsersNotificationDTO scUsersEvent = buildBaseScUsersEvent();
     scUsersEvent.setEventType("UPDATE");
+    scUsersEvent.getUser().setRelationshipStatus("ACTIVE");
 
     iamUsersConsumer.accept(scUsersEvent);
 
-    verifyNoInteractions(operatorCreationHandlerServiceMock);
+    verify(operatorCreationHandlerServiceMock).createOrganizationOperator(scUsersEvent);
   }
 
   @Test
@@ -66,6 +71,17 @@ class IamUsersConsumerTest {
     iamUsersConsumer.accept(scUsersEvent);
 
     verify(operatorCreationHandlerServiceMock).createOrganizationOperator(scUsersEvent);
+  }
+
+  @Test
+  void givenEventTypeDeleteWhenAcceptThenDeleteOperator() {
+    ScUsersNotificationDTO scUsersEvent = buildBaseScUsersEvent();
+    scUsersEvent.setEventType("UPDATE");
+    scUsersEvent.getUser().setRelationshipStatus("DELETED");
+
+    iamUsersConsumer.accept(scUsersEvent);
+
+    verify(operatorDeletionHandlerService).deleteOrganizationOperator(scUsersEvent);
   }
 
   private ScUsersNotificationDTO buildBaseScUsersEvent() {
