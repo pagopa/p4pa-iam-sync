@@ -131,7 +131,7 @@ class OrganizationCreationHandlerServiceTest {
   @Test
   void givenEventStatusCancelledAndPresentOrganizationWhenCreateOrganizationThenUpdateOrganizationStatusToCancelled() {
     ScContractDTO scContractEvent = new ScContractDTO();
-    scContractEvent.setState("CANCELLED");
+    scContractEvent.setState("CLOSED");
 
     ScInstitutionDTO institution = new ScInstitutionDTO();
     institution.setOriginId("ipaCode");
@@ -160,7 +160,7 @@ class OrganizationCreationHandlerServiceTest {
   @Test
   void givenEventStatusCancelledAndMissingOrganizationWhenCreateOrganizationThenDoNothing() {
     ScContractDTO scContractEvent = new ScContractDTO();
-    scContractEvent.setState("CANCELLED");
+    scContractEvent.setState("CLOSED");
 
     ScInstitutionDTO institution = new ScInstitutionDTO();
     institution.setOriginId("ipaCode");

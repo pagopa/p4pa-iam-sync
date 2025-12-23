@@ -1,7 +1,6 @@
 package it.gov.pagopa.pu.iamsync.connector.auth;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
 import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
@@ -61,15 +60,31 @@ class AuthzServiceTest {
   void whenCreateOrganizationOperatorThenCallAuthzClient() {
     OperatorDTO expected = new OperatorDTO();
     String accessToken = "accessToken";
+    String organizationIpaCode = "ipaCode";
 
-    Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-    Mockito.when(authzClientMock.createOrganizationOperator(anyString(), any(
+    Mockito.when(authnServiceMock.getAccessToken(organizationIpaCode)).thenReturn(accessToken);
+    Mockito.when(authzClientMock.createOrganizationOperator(eq(organizationIpaCode), any(
         CreateOperatorRequest.class), eq(accessToken)))
       .thenReturn(expected);
 
-    OperatorDTO result = authzService.createOrganizationOperator("ipaCode",
+    OperatorDTO result = authzService.createOrganizationOperator(organizationIpaCode,
       new CreateOperatorRequest());
 
     Assertions.assertSame(expected, result);
+  }
+
+  @Test
+  void whenDeleteOrganizationOperatorByExternalUserIdThenCallAuthzClient() {
+    String accessToken = "accessToken";
+    String organizationIpaCode = "ipaCode";
+    String externalUserId = "externalUserId";
+
+    Mockito.when(authnServiceMock.getAccessToken(organizationIpaCode)).thenReturn(accessToken);
+
+    authzService.deleteOrganizationOperatorByExternalUserId(organizationIpaCode,
+      externalUserId);
+
+    Mockito.verify(authzClientMock)
+      .deleteOrganizationOperatorByExternalUserId(organizationIpaCode, externalUserId, accessToken);
   }
 }
