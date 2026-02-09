@@ -1,7 +1,7 @@
 package it.gov.pagopa.pu.iamsync.exception;
 
 import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO;
-import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO.CodeEnum;
+import it.gov.pagopa.pu.iamsync.dto.generated.ErrorDTO.CategoryEnum;
 import it.gov.pagopa.pu.iamsync.utils.Utilities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,24 +36,24 @@ public class ControllerExceptionHandler {
 
   @ExceptionHandler({ResourceNotFoundException.class})
   public ResponseEntity<ErrorDTO> handleNotFoundError(RuntimeException ex, HttpServletRequest request){
-    return handleException(ex, request, HttpStatus.NOT_FOUND, CodeEnum.NOT_FOUND);
+    return handleException(ex, request, HttpStatus.NOT_FOUND, CategoryEnum.NOT_FOUND);
   }
 
   @ExceptionHandler({ValidationException.class, HttpMessageNotReadableException.class, MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
   public ResponseEntity<ErrorDTO> handleViolationException(Exception ex, HttpServletRequest request) {
-    return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.CodeEnum.BAD_REQUEST);
+    return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.CategoryEnum.BAD_REQUEST);
   }
 
   @ExceptionHandler({ServletException.class, ErrorResponseException.class})
   public ResponseEntity<ErrorDTO> handleServletException(Exception ex, HttpServletRequest request) {
     HttpStatusCode httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-    ErrorDTO.CodeEnum errorCode = ErrorDTO.CodeEnum.GENERIC_ERROR;
+    ErrorDTO.CategoryEnum errorCode = ErrorDTO.CategoryEnum.GENERIC_ERROR;
     if (ex instanceof ErrorResponse errorResponse) {
       httpStatus = errorResponse.getStatusCode();
       if (httpStatus.isSameCodeAs(HttpStatus.NOT_FOUND)) {
-        errorCode = ErrorDTO.CodeEnum.NOT_FOUND;
+        errorCode = ErrorDTO.CategoryEnum.NOT_FOUND;
       } else if (httpStatus.is4xxClientError()) {
-        errorCode = ErrorDTO.CodeEnum.BAD_REQUEST;
+        errorCode = ErrorDTO.CategoryEnum.BAD_REQUEST;
       }
     }
     return handleException(ex, request, httpStatus, errorCode);
@@ -61,10 +61,10 @@ public class ControllerExceptionHandler {
 
   @ExceptionHandler({RuntimeException.class})
   public ResponseEntity<ErrorDTO> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
-    return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.CodeEnum.GENERIC_ERROR);
+    return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.CategoryEnum.GENERIC_ERROR);
   }
 
-  static ResponseEntity<ErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, ErrorDTO.CodeEnum errorEnum) {
+  static ResponseEntity<ErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, ErrorDTO.CategoryEnum errorEnum) {
     logException(ex, request, httpStatus);
 
     String message = buildReturnedMessage(ex);

@@ -34,10 +34,10 @@ components:
     ErrorDTO:
       type: object
       required:
-        - code
+        - category
         - message
       properties:
-        code:
+        category:
           type: string
           enum:
             - NOT_FOUND
