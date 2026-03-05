@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'asyncapi/generated.asyncapi.json'
+  workflow_dispatch:
 
 permissions:
   packages: write
