@@ -127,7 +127,7 @@ management:
 
 springwolf:
   docket:
-    base-package: it.gov.pagopa.pu.workflow.event
+    base-package: it.gov.pagopa.pu.iamsync.event
     info:
       title: "\${spring.application.name}"
       version: "\${spring.application.version}"
