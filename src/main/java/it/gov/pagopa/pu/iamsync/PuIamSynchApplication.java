@@ -7,12 +7,15 @@ import org.springframework.boot.webmvc.autoconfigure.error.ErrorMvcAutoConfigura
 
 import java.util.TimeZone;
 
-@SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class})
+@SpringBootApplication(
+  exclude = {ErrorMvcAutoConfiguration.class},
+  scanBasePackages = "it.gov.pagopa.pu"
+)
 public class PuIamSynchApplication {
 
-	public static void main(String[] args) {
+  public static void main(String[] args) {
     TimeZone.setDefault(Constants.DEFAULT_TIMEZONE);
-		SpringApplication.run(PuIamSynchApplication.class, args);
-	}
+    SpringApplication.run(PuIamSynchApplication.class, args);
+  }
 
 }
