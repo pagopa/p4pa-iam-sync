@@ -20,7 +20,7 @@ public class PerformanceLoggerTest {
         this.memoryAppender = buildPerformanceLoggerMemoryAppender(APPENDER_NAME);
     }
 
-    static MemoryAppender buildPerformanceLoggerMemoryAppender(String appender) {
+    public static MemoryAppender buildPerformanceLoggerMemoryAppender(String appender) {
         ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("PERFORMANCE_LOG."+appender);
         MemoryAppender memoryAppender = new MemoryAppender();
         memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
