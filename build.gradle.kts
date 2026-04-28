@@ -65,7 +65,6 @@ val mapStructVersion = "1.6.3"
 val commonsLang3Version = "3.20.0"
 val lz4JavaVersion = "1.11.0"
 
-
 val springCloudDepsVersion = "2025.1.1"
 
 dependencyManagement {
