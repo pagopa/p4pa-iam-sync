@@ -154,6 +154,7 @@ logging:
     PERFORMANCE_LOG.INCOMING_EVENT: "\${LOG_LEVEL_PERFORMANCE_LOG_INCOMING_EVENT:\${logging.level.PERFORMANCE_LOG}}"
 
 springdoc:
+  api-docs.version: openapi_3_0
   writer-with-default-pretty-printer: true
 
 jwt:
