@@ -2,7 +2,9 @@
 
 This application belong to the **batch** tier of the **Piattaforma Unitaria** product.
 
-See [PU Microservice Architecture](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1405845916/Architettura+microservizi) for more details.
+See [PU Microservice Architecture](https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/reference/technical-docs/Architettura_microservizi.pdf) for more details.
+
+See [p4pa-doc](https://github.com/pagopa/p4pa-doc) for further documentation.
 
 ## 🧱 Role
 
@@ -37,8 +39,10 @@ See [log configured pattern](/src/main/resources/logback-spring.xml).
 ### 🧩 Microservices
 * [p4pa-auth](https://github.com/pagopa/p4pa-auth):
   * To obtain a technical access token (used on WF to call inner microservices);
-  * To handle organization updates
-  * To handle operators updates
+  * To handle organization updates;
+  * To handle operators updates;
+* [p4pa-organization](https://github.com/pagopa/p4pa-organization):
+  * To handle organization creation/update.
 
 ## 🔧 Configuration
 
