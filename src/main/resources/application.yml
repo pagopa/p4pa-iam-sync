@@ -9,11 +9,87 @@ spring:
   threads:
     virtual:
       enabled: true
+  cloud:
+    function:
+      definition: iamOrganizationsConsumer;iamUsersConsumer
+    stream:
+      binders:
+        kafka-iam-organization-consumer:
+          type: kafka
+          environment:
+            spring.cloud.stream.kafka.binder:
+              brokers: "\${KAFKA_IAM_ORGANIZATIONS_BINDER_BROKER:}"
+              configuration:
+                sasl.jaas.config: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_SASL_JAAS_CONFIG:}"
+        kafka-iam-users-consumer:
+          type: kafka
+          environment:
+            spring.cloud.stream.kafka.binder:
+              brokers: "\${KAFKA_IAM_USERS_BINDER_BROKER:}"
+              configuration:
+                sasl.jaas.config: "\${KAFKA_IAM_USERS_CONSUMER_SASL_JAAS_CONFIG:}"
+      bindings:
+        iamOrganizationsConsumer-in-0:
+          binder: kafka-iam-organization-consumer
+          content-type: "\${KAFKA_CONTENT_TYPE:application/json}"
+          destination: "\${KAFKA_IAM_ORGANIZATIONS_TOPIC:sc-contracts}"
+          group: "\${KAFKA_IAM_ORGANIZATIONS_GROUP_ID:piattaforma-unitaria-organizations-consumer}"
+          consumer.auto-startup: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_ENABLED:true}"
+        iamUsersConsumer-in-0:
+          binder: kafka-iam-users-consumer
+          content-type: "\${KAFKA_CONTENT_TYPE:application/json}"
+          destination: "\${KAFKA_IAM_USERS_TOPIC:sc-users}"
+          group: "\${KAFKA_IAM_USERS_GROUP_ID:piattaforma-unitaria-users-consumer}"
+          consumer.auto-startup: "\${KAFKA_IAM_USERS_CONSUMER_ENABLED:true}"
+      kafka:
+        binder:
+          auto-create-topics: false
+          configuration:
+            heartbeat.interval.ms: "\${KAFKA_CONFIG_HEARTBEAT_INTERVAL_MS:3000}"
+            session.timeout.ms: "\${KAFKA_CONFIG_SESSION_TIMEOUT_MS:30000}"
+            request.timeout.ms: "\${KAFKA_CONFIG_REQUEST_TIMEOUT_MS:60000}"
+            metadata.max.age.ms: "\${KAFKA_CONFIG_METADATA_MAX_AGE:180000}"
+            sasl.mechanism: "\${KAFKA_CONFIG_SASL_MECHANISM:PLAIN}"
+            security.protocol: "\${KAFKA_CONFIG_SECURITY_PROTOCOL:SASL_SSL}"
+            max.request.size: "\${KAFKA_CONFIG_MAX_REQUEST_SIZE:1000000}"
+        binders:
+          iamOrganizationsConsumer-in-0:
+            consumer:
+              autoCommitOffset: "\${KAFKA_IAM_ORGANIZATIONS_AUTO_COMMIT:\${KAFKA_CONSUMER_CONFIG_AUTO_COMMIT:true}}"
+              configuration:
+                connections.max.idle.ms: "\${KAFKA_IAM_ORGANIZATIONS_REQUEST_CONNECTIONS_MAX_IDLE_MS:\${KAFKA_CONSUMER_CONFIG_CONNECTIONS_MAX_IDLE_MS:180000}}"
+                max.poll:
+                  interval.ms: "\${KAFKA_IAM_ORGANIZATIONS_INTERVAL_TIMEOUT_MS:\${KAFKA_CONFIG_MAX_POLL_INTERVAL_TIMEOUT_MS:300000}}"
+                  records: "\${KAFKA_IAM_ORGANIZATIONS_MAX_POLL_SIZE:\${KAFKA_CONSUMER_CONFIG_MAX_POLL_SIZE:500}}"
+                socket.connection.setup.timeout:
+                  max.ms: "\${KAFKA_IAM_ORGANIZATIONS_REQUEST_CONNECTION_TIMEOUT_MAX_MS:\${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MAX_MS:200000}}"
+                  ms: "\${KAFKA_IAM_ORGANIZATIONS_REQUEST_CONNECTION_TIMEOUT_MS:\${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MS:100000}}"
+              standardHeaders: "\${KAFKA_IAM_ORGANIZATIONS_STANDARD_HEADERS:\${KAFKA_CONSUMER_CONFIG_STANDARD_HEADERS:both}}"
+              startOffset: "\${KAFKA_IAM_ORGANIZATIONS_REQUEST_START_OFFSET:\${KAFKA_CONSUMER_CONFIG_START_OFFSET:earliest}}"
+          iamUsersConsumer-in-0:
+            consumer:
+              autoCommitOffset: "\${KAFKA_IAM_USERS_AUTO_COMMIT:\${KAFKA_CONSUMER_CONFIG_AUTO_COMMIT:true}}"
+              configuration:
+                connections.max.idle.ms: "\${KAFKA_IAM_USERS_REQUEST_CONNECTIONS_MAX_IDLE_MS:\${KAFKA_CONSUMER_CONFIG_CONNECTIONS_MAX_IDLE_MS:180000}}"
+                max.poll:
+                  interval.ms: "\${KAFKA_IAM_USERS_INTERVAL_TIMEOUT_MS:\${KAFKA_CONFIG_MAX_POLL_INTERVAL_TIMEOUT_MS:300000}}"
+                  records: "\${KAFKA_IAM_USERS_MAX_POLL_SIZE:\${KAFKA_CONSUMER_CONFIG_MAX_POLL_SIZE:500}}"
+                socket.connection.setup.timeout:
+                  max.ms: "\${KAFKA_IAM_USERS_REQUEST_CONNECTION_TIMEOUT_MAX_MS:\${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MAX_MS:200000}}"
+                  ms: "\${KAFKA_IAM_USERS_REQUEST_CONNECTION_TIMEOUT_MS:\${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MS:100000}}"
+              standardHeaders: "\${KAFKA_IAM_USERS_STANDARD_HEADERS:\${KAFKA_CONSUMER_CONFIG_STANDARD_HEADERS:both}}"
+              startOffset: "\${KAFKA_IAM_USERS_REQUEST_START_OFFSET:\${KAFKA_CONSUMER_CONFIG_START_OFFSET:earliest}}"
+
 management:
   info:
     build.enabled: true
     java.enabled: true
     git.enabled: true
+  otlp.metrics.export.enabled: "\${TRACING_EXPORT:false}"
+  tracing:
+    sampling.probability: "\${TRACING_SAMPLING_PROBABILITY:1.0}"
+    baggage.remote-fields:
+      - X-user-id
   observations:
     http.server:
       filter.order: -100
@@ -31,7 +107,7 @@ management:
       show-details: "\${HEALTH_ACTUATOR_SHOW_DETAILS:when-authorized}"
       group:
         readiness.include: "*"
-        liveness.include: livenessState,diskSpace,ping
+        liveness.include: livenessState,diskSpace,ping,binders
     prometheus:
       enabled: true
   metrics:
@@ -49,17 +125,49 @@ management:
       http: true
       logback: true
 
+springwolf:
+  docket:
+    base-package: it.gov.pagopa.pu.iamsync.event
+    info:
+      title: "\${spring.application.name}"
+      version: "\${spring.application.version}"
+      description: AsyncAPI And Models
+    servers.kafka-server:
+      protocol: kafka
+      host: "\${KAFKA_BINDER_BROKER:localhost:9093}"
+  use-fqn: false
+
 logging:
   level:
     root: "\${LOG_LEVEL_ROOT:INFO}"
     it.gov.pagopa: "\${LOG_LEVEL_PAGOPA:INFO}"
     org.springframework: "\${LOG_LEVEL_SPRING:INFO}"
     org.springframework.boot.availability: "\${LOG_LEVEL_SPRING_BOOT_AVAILABILITY:DEBUG}"
-    it.gov.pagopa.template.exception.ControllerExceptionHandler: "\${LOGGING_LEVEL_API_REQUEST_EXCEPTION:INFO}"
+    org.springframework.kafka: "\${LOG_LEVEL_SPRING_KAFKA:INFO}"
+    org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: "\${LOG_LEVEL_KAFKA_CONSUMER_COORDINATOR:WARN}"
+    org.apache.kafka.clients.admin.internals.AdminMetadataManager: "\${LOG_LEVEL_KAFKA_ADMIN_METADATA_MANAGER:WARN}"
+    it.gov.pagopa.pu.iamsync.exception.ControllerExceptionHandler: "\${LOGGING_LEVEL_API_REQUEST_EXCEPTION:INFO}"
     org.springdoc.core.utils.SpringDocAnnotationsUtils: "\${LOG_LEVEL_SPRING_DOC:ERROR}"
     PERFORMANCE_LOG: "\${LOG_LEVEL_PERFORMANCE_LOG:INFO}"
     PERFORMANCE_LOG.API_REQUEST: "\${LOG_LEVEL_PERFORMANCE_LOG_API_REQUEST:\${logging.level.PERFORMANCE_LOG}}"
     PERFORMANCE_LOG.REST_INVOKE: "\${LOG_LEVEL_PERFORMANCE_LOG_REST_INVOKE:\${logging.level.PERFORMANCE_LOG}}"
+    PERFORMANCE_LOG.INCOMING_EVENT: "\${LOG_LEVEL_PERFORMANCE_LOG_INCOMING_EVENT:\${logging.level.PERFORMANCE_LOG}}"
+
+springdoc:
+  api-docs.version: openapi_3_0
+  writer-with-default-pretty-printer: true
+
+jwt:
+  access-token:
+    public-key: "\${JWT_TOKEN_PUBLIC_KEY:-----BEGIN PUBLIC KEY-----
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2ovm/rd3g69dq9PisinQ
+                6mWy8ZttT8D+GKXCsHZycsGnN7b74TPyYy+4+h+9cgJeizp8RDRrufHjiBrqi/2r
+                eOk/rD7ZHbpfQvHK8MYfgIVdtTxYMX/GGdOrX6/5TV2b8e2aCG6GmxF0UuEvxY9o
+                TmcZUxnIeDtl/ixz4DQ754eS363qWfEA92opW+jcYzr07sbQtR86e+Z/s/CUeX6W
+                1PHNvBqdlAgp2ecr/1DOLq1D9hEANBPSwbt+FM6FNe4vLphi7GTwiB0yaAuy+jE8
+                odND6HPvvvmgbK1/2qTHn/HJjWUm11LUC73BszR32BKbdEEhxPQnnwswVekWzPi1
+                IwIDAQAB
+                -----END PUBLIC KEY-----}"
 
 rest:
   defaults:
@@ -70,3 +178,16 @@ rest:
     timeout:
       connect-millis: "\${DEFAULT_REST_TIMEOUT_CONNECT_MILLIS:120000}"
       read-millis: "\${DEFAULT_REST_TIMEOUT_READ_MILLIS:120000}"
+
+  auth:
+    base-url: "\${AUTH_BASE_URL:http://localhost:8080/auth}"
+    max-attempts: "\${AUTH_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${AUTH_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${AUTH_PRINT_BODY_WHEN_ERROR:true}"
+    post-token:
+      client_secret: "\${AUTH_CLIENT_SECRET:clientsecret}"
+  organization:
+    base-url: "\${ORGANIZATION_BASE_URL:}"
+    max-attempts: "\${ORGANIZATION_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${ORGANIZATION_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${ORGANIZATION_PRINT_BODY_WHEN_ERROR:true}"

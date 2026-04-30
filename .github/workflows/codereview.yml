@@ -1,4 +1,4 @@
-name: CHANGEME - Code Review
+name: p4pa-iam-sync - Code Review
 
 on:
   push:
