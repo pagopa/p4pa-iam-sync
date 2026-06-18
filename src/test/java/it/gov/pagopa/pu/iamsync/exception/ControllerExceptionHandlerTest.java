@@ -58,7 +58,7 @@ import static org.mockito.Mockito.doThrow;
 class ControllerExceptionHandlerTest {
 
   public static final String DATA = "data";
-  public static final TestRequestBody BODY = new TestRequestBody("bodyData", null, "abc", LocalDateTime.now());
+  public static final TestRequestBody BODY = new TestRequestBody("bodyData", null, "abc", LocalDateTime.of(2026, 6, 18, 12, 0));
 
   @Autowired
   private MockMvc mockMvc;
@@ -82,6 +82,7 @@ class ControllerExceptionHandlerTest {
   @BeforeEach
   void init() {
     TestUtils.clearDefaultTimezone();
+    UtilitiesTest.setTraceId(traceId);
   }
 
   @Data
@@ -97,11 +98,6 @@ class ControllerExceptionHandlerTest {
   }
 
   private final String traceId = "TRACEID";
-
-  @BeforeEach
-  void setTraceId() {
-    UtilitiesTest.setTraceId(traceId);
-  }
 
   @AfterEach
   void clearTraceId() {
