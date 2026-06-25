@@ -20,6 +20,7 @@ spring:
             spring.cloud.stream.kafka.binder:
               brokers: "\${KAFKA_IAM_ORGANIZATIONS_BINDER_BROKER:}"
               configuration:
+                client.id: iamsync-iamOrganizationsConsumer
                 sasl.jaas.config: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_SASL_JAAS_CONFIG:}"
         kafka-iam-users-consumer:
           type: kafka
@@ -27,6 +28,7 @@ spring:
             spring.cloud.stream.kafka.binder:
               brokers: "\${KAFKA_IAM_USERS_BINDER_BROKER:}"
               configuration:
+                client.id: iamsync-iamUsersConsumer
                 sasl.jaas.config: "\${KAFKA_IAM_USERS_CONSUMER_SASL_JAAS_CONFIG:}"
       bindings:
         iamOrganizationsConsumer-in-0:
@@ -34,13 +36,17 @@ spring:
           content-type: "\${KAFKA_CONTENT_TYPE:application/json}"
           destination: "\${KAFKA_IAM_ORGANIZATIONS_TOPIC:sc-contracts}"
           group: "\${KAFKA_IAM_ORGANIZATIONS_GROUP_ID:piattaforma-unitaria-organizations-consumer}"
-          consumer.auto-startup: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_ENABLED:true}"
+          consumer:
+            auto-startup: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_ENABLED:true}"
+            concurrency: "\${KAFKA_IAM_ORGANIZATIONS_CONSUMER_CONCURRENCY:1}"
         iamUsersConsumer-in-0:
           binder: kafka-iam-users-consumer
           content-type: "\${KAFKA_CONTENT_TYPE:application/json}"
           destination: "\${KAFKA_IAM_USERS_TOPIC:sc-users}"
           group: "\${KAFKA_IAM_USERS_GROUP_ID:piattaforma-unitaria-users-consumer}"
-          consumer.auto-startup: "\${KAFKA_IAM_USERS_CONSUMER_ENABLED:true}"
+          consumer:
+            auto-startup: "\${KAFKA_IAM_USERS_CONSUMER_ENABLED:true}"
+            concurrency: "\${KAFKA_IAM_USERS_CONSUMER_CONCURRENCY:1}"
       kafka:
         binder:
           auto-create-topics: false
