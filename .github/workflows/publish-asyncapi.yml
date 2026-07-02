@@ -34,17 +34,24 @@ jobs:
           cd p4pa-doc
           ENV=${{ github.ref_name }}
           DEST_DIR=asyncapi/$ENV/internal
+          DEST_DIR_EXTERNAL=asyncapi/$ENV/consumed
+
           mkdir -p $DEST_DIR
+          mkdir -p $DEST_DIR_EXTERNAL
 
           REPO_NAME=${{ github.event.repository.name }}
+
           ASYNCAPI_FILE_GENERATED=$DEST_DIR/$REPO_NAME.generated.asyncapi.json
+          ASYNCAPI_FILE_EXTERNAL=$DEST_DIR_EXTERNAL/$REPO_NAME.asyncapi.json
 
           cp ../$REPO_NAME/asyncapi/generated.asyncapi.json $ASYNCAPI_FILE_GENERATED
+          cp ../$REPO_NAME/asyncapi/generated.asyncapi.json $ASYNCAPI_FILE_EXTERNAL
 
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "p4pa-pagopa-github-bot"
 
           git add $ASYNCAPI_FILE_GENERATED
+          git add $ASYNCAPI_FILE_EXTERNAL
           git diff-index --quiet HEAD || git commit -m "Updated internal AsyncAPI spec for $REPO_NAME on environment $ENV"
 
           git config --local remote.origin.url 'https://p4pa-pagopa-github-bot:${{ secrets.ADMIN_GITHUB_TOKEN_RW }}@github.com/pagopa/p4pa-doc.git'
