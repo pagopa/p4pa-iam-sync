@@ -3,7 +3,7 @@ package it.gov.pagopa.pu.iamsync.connector.auth.client;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
-import it.gov.pagopa.pu.auth.controller.generated.AuthzApi;
+import it.gov.pagopa.pu.auth.client.generated.AuthzApi;
 import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
 import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
 import it.gov.pagopa.pu.auth.dto.generated.UserInfo;
