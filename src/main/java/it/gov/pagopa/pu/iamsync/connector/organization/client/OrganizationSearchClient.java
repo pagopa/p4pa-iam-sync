@@ -2,10 +2,10 @@ package it.gov.pagopa.pu.iamsync.connector.organization.client;
 
 import it.gov.pagopa.pu.iamsync.connector.auth.AuthnService;
 import it.gov.pagopa.pu.iamsync.connector.organization.config.OrganizationApisHolder;
+import it.gov.pagopa.pu.iamsync.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 @Service
@@ -25,7 +25,7 @@ public class OrganizationSearchClient {
       return organizationApisHolder.getOrganizationSearchControllerApi(
           authnService.getAccessToken())
         .crudOrganizationsFindByIpaCode(ipaCode);
-    } catch (HttpClientErrorException.NotFound e) {
+    } catch (RestInvokeNotFoundException e) {
       log.info("Cannot find organization having ipaCode {}", ipaCode);
       return null;
     }
@@ -37,7 +37,7 @@ public class OrganizationSearchClient {
       return organizationApisHolder.getOrganizationSearchControllerApi(
           authnService.getAccessToken())
         .crudOrganizationsFindByExternalOrganizationId(externalOrganizationId);
-    } catch (HttpClientErrorException.NotFound e) {
+    } catch (RestInvokeNotFoundException e) {
       log.info("Cannot find organization having externalOrganizationId {}",
         externalOrganizationId);
       return null;
