@@ -1,9 +1,8 @@
 package it.gov.pagopa.pu.iamsync.connector.organization.client;
 
-import static org.mockito.Mockito.when;
-
 import it.gov.pagopa.pu.iamsync.connector.auth.AuthnService;
 import it.gov.pagopa.pu.iamsync.connector.organization.config.OrganizationApisHolder;
+import it.gov.pagopa.pu.iamsync.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.pu.organization.client.generated.OrganizationSearchControllerApi;
 import it.gov.pagopa.pu.organization.dto.generated.Organization;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrganizationSearchClientTest {
@@ -75,9 +75,7 @@ class OrganizationSearchClientTest {
     when(
       organizationSearchControllerApiMock.crudOrganizationsFindByIpaCode(
         orgIpaCode))
-      .thenThrow(
-        HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null,
-          null, null));
+      .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE"));
 
     // When
     Organization result = organizationSearchClient.findByIpaCode(orgIpaCode);
@@ -116,9 +114,7 @@ class OrganizationSearchClientTest {
     when(
       organizationSearchControllerApiMock.crudOrganizationsFindByExternalOrganizationId(
         externalOrganizationId))
-      .thenThrow(
-        HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null,
-          null, null));
+      .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE"));
 
     // When
     Organization result = organizationSearchClient.findByExternalOrganizationId(
