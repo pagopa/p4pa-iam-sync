@@ -64,6 +64,7 @@ val springWolfAsyncApiVersion = "1.21.0"
 val springWolfUiAsyncApiVersion = "1.21.0"
 val mapStructVersion = "1.6.3"
 val commonsLang3Version = "3.20.0"
+val podamVersion = "8.0.2.RELEASE"
 
 val springCloudDepsVersion = "2025.1.2"
 
@@ -120,6 +121,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-security-test")
   testImplementation("org.mockito:mockito-core")
   testImplementation("org.projectlombok:lombok")
+  testImplementation("uk.co.jemos.podam:podam:$podamVersion")
 }
 
 tasks.withType<Test> {
