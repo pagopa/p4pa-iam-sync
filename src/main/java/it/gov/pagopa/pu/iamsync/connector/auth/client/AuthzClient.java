@@ -4,10 +4,10 @@ import it.gov.pagopa.pu.auth.dto.generated.CreateOperatorRequest;
 import it.gov.pagopa.pu.auth.dto.generated.OperatorDTO;
 import it.gov.pagopa.pu.auth.dto.generated.UserInfo;
 import it.gov.pagopa.pu.iamsync.connector.auth.config.AuthApisHolder;
+import it.gov.pagopa.pu.iamsync.exception.common.RestInvokeNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 @Lazy
 @Slf4j
@@ -24,7 +24,7 @@ public class AuthzClient {
         try {
             return authApisHolder.getAuthzApi(accessToken)
                     .getUserInfoFromMappedExternaUserId(mappedExternalUserId);
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (RestInvokeNotFoundException e) {
             log.info("Cannot find User having externalUserId {}", mappedExternalUserId);
             return null;
         }
