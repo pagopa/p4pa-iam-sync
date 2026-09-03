@@ -68,6 +68,9 @@ val podamVersion = "8.0.2.RELEASE"
 
 val springCloudDepsVersion = "2025.1.3"
 
+// CVE Security dependencies
+val tomcatEmbedCoreVersion = "11.0.25"
+
 dependencyManagement {
   imports {
     mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDepsVersion")
@@ -86,15 +89,15 @@ dependencies {
   }
   implementation("at.yawk.lz4:lz4-java:$lz4JavaVersion")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenApiVersion}") {
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") {
     exclude(group = "org.apache.commons", module = "commons-lang3")
   }
   implementation("org.apache.commons:commons-lang3:$commonsLang3Version")
-  implementation("io.github.springwolf:springwolf-kafka:${springWolfAsyncApiVersion}") {
+  implementation("io.github.springwolf:springwolf-kafka:$springWolfAsyncApiVersion") {
     exclude(group = "org.lz4", module = "lz4-java")
   }
-  implementation("io.github.springwolf:springwolf-ui:${springWolfAsyncApiVersion}")
-  implementation("io.github.springwolf:springwolf-cloud-stream:${springWolfAsyncApiVersion}")
+  implementation("io.github.springwolf:springwolf-ui:$springWolfAsyncApiVersion")
+  implementation("io.github.springwolf:springwolf-cloud-stream:$springWolfAsyncApiVersion")
   implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
   implementation("io.micrometer:micrometer-registry-prometheus")
   implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
@@ -104,16 +107,14 @@ dependencies {
   implementation("com.github.danielwegener:logback-kafka-appender:$kafkaAppender") {
     exclude(group = "org.lz4", module = "lz4-java")
   }
-  implementation("org.bouncycastle:bcprov-jdk18on:${bouncycastleVersion}")
-  implementation("org.mapstruct:mapstruct:$mapStructVersion")
+  implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
+
+  // CVE Security dependencies
+  implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatEmbedCoreVersion")
 
   compileOnly("org.projectlombok:lombok")
-
-  annotationProcessor("org.projectlombok:lombok")
   annotationProcessor("org.projectlombok:lombok")
   annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
-
-  testAnnotationProcessor("org.projectlombok:lombok")
   testAnnotationProcessor("org.projectlombok:lombok")
   testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
 
