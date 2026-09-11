@@ -31,11 +31,6 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
       return;
     }
 
-    if (scContractEvent.getRootAggregator() == null || scContractEvent.getRootAggregator().getInstitutionId() == null) {
-      log.info("Discarding event due to missing brokerId");
-      return;
-    }
-
     organizationCreationHandlerService.createOrganization(scContractEvent);
   }
 
