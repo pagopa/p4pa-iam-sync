@@ -73,7 +73,7 @@ class IamOrganizationsConsumerTest {
   }
 
   @Test
-  void givenSubUnitCodeNotNullWhenAcceptThenDiscardMessage() {
+  void givenSubUnitCodeWithTextWhenAcceptThenDiscardMessage() {
     ScContractDTO scContractEvent = buildBaseScContractEvent();
     scContractEvent.getInstitution().setSubUnitCode("subUnitCode");
 
@@ -94,6 +94,4 @@ class IamOrganizationsConsumerTest {
 
     return scContractEvent;
   }
-
-
 }
