@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -30,6 +31,16 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
 
     if (!PIATTAFORMA_UNITARIA_PRODUCT.equals(scContractEvent.getProduct())) {
       log.info("Discarding event due to not matching product");
+      return;
+    }
+
+    String subUnitCode = scContractEvent.getInstitution().getSubUnitCode();
+
+    if (StringUtils.hasText(subUnitCode)) {
+      log.info("Discarding event because subUnit creation from queue is not supported (ipaCode: {}, subUnitCode: {})",
+        ipaCode,
+        subUnitCode
+      );
       return;
     }
 

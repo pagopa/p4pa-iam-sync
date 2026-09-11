@@ -72,6 +72,16 @@ class IamOrganizationsConsumerTest {
     verify(organizationCreationHandlerServiceMock).createOrganization(scContractEvent);
   }
 
+  @Test
+  void givenSubUnitCodeWithTextWhenAcceptThenDiscardMessage() {
+    ScContractDTO scContractEvent = buildBaseScContractEvent();
+    scContractEvent.getInstitution().setSubUnitCode("subUnitCode");
+
+    iamOrganizationsConsumer.accept(scContractEvent);
+
+    verifyNoInteractions(organizationCreationHandlerServiceMock);
+  }
+
   private ScContractDTO buildBaseScContractEvent() {
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setProduct(PIATTAFORMA_UNITARIA_PRODUCT);
@@ -84,6 +94,4 @@ class IamOrganizationsConsumerTest {
 
     return scContractEvent;
   }
-
-
 }
