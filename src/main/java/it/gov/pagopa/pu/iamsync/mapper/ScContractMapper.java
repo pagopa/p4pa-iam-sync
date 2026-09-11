@@ -21,13 +21,13 @@ public class ScContractMapper {
     organizationCreateDTO.setIpaCode(scContractEvent.getInstitution().getOriginId());
     organizationCreateDTO.setOrgFiscalCode(scContractEvent.getInstitution().getTaxCode());
     organizationCreateDTO.setOrgName(scContractEvent.getInstitution().getDescription());
-    organizationCreateDTO.setOrgTypeCode(scContractEvent.getInstitution().getInstitutionType());
     organizationCreateDTO.setOrgEmail(scContractEvent.getInstitution().getDigitalAddress());
 
     organizationCreateDTO.setFlagNotifyIo(false);
     organizationCreateDTO.setFlagNotifyOutcomePush(false);
     organizationCreateDTO.setFlagPaymentNotification(false);
     organizationCreateDTO.setPdndEnabled(false);
+    organizationCreateDTO.setFlagTreasury(false);
 
     return organizationCreateDTO;
   }

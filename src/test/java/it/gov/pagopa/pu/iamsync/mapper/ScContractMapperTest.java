@@ -29,7 +29,6 @@ class ScContractMapperTest {
     institution.setOriginId("ipaCode");
     institution.setTaxCode("12345678903");
     institution.setDescription("Comune di Test");
-    institution.setInstitutionType("PA");
     institution.setDigitalAddress("pec@comune.test.it");
     scContractEvent.setInstitution(institution);
 
@@ -41,16 +40,16 @@ class ScContractMapperTest {
 
     assertEquals(scContractEvent.getInstitutionId(), result.getExternalOrganizationId());
     assertEquals(scContractEvent.getCreatedAt().toLocalDate(), result.getStartDate());
-    assertEquals(scContractEvent.getState(), result.getStatus().getValue());
+    assertEquals(OrganizationStatus.ACTIVE, result.getStatus());
     assertEquals(scContractEvent.getInstitution().getOriginId(), result.getIpaCode());
     assertEquals(scContractEvent.getInstitution().getTaxCode(), result.getOrgFiscalCode());
     assertEquals(scContractEvent.getInstitution().getDescription(), result.getOrgName());
-    assertEquals(scContractEvent.getInstitution().getInstitutionType(), result.getOrgTypeCode());
     assertEquals(scContractEvent.getInstitution().getDigitalAddress(), result.getOrgEmail());
     assertFalse(result.getFlagNotifyIo());
     assertFalse(result.getFlagNotifyOutcomePush());
     assertFalse(result.getFlagPaymentNotification());
     assertFalse(result.getPdndEnabled());
+    assertFalse(result.getFlagTreasury());
   }
 
   @Test
