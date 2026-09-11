@@ -1,8 +1,7 @@
 package it.gov.pagopa.pu.iamsync.mapper;
 
 import static it.gov.pagopa.pu.iamsync.utils.Constants.SC_CONTRACT_ACTIVE_STATE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
@@ -52,5 +51,11 @@ class ScContractMapperTest {
     assertFalse(result.getFlagNotifyOutcomePush());
     assertFalse(result.getFlagPaymentNotification());
     assertFalse(result.getPdndEnabled());
+  }
+
+  @Test
+  void givenNullEventWhenMapToOrganizationCreateDTOThenReturnNull() {
+    assertNull(scContractMapper.mapToOrganizationCreateDTO(null,
+      OrganizationStatus.DRAFT));
   }
 }
