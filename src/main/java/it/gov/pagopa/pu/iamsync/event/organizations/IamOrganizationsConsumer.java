@@ -33,9 +33,11 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
       return;
     }
 
-    if (scContractEvent.getInstitution().getSubUnitCode() != null) {
+    String subUnitCode = scContractEvent.getInstitution().getSubUnitCode();
+
+    if (subUnitCode != null) {
       log.info("Discarding event because subUnit creation from queue is not supported (subUnitCode: {})",
-        scContractEvent.getInstitution().getSubUnitCode()
+        subUnitCode
       );
       return;
     }
