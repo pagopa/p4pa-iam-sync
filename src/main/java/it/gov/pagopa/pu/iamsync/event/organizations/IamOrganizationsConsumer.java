@@ -34,7 +34,7 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
     }
 
     if (scContractEvent.getRootAggregator() == null) {
-      log.info("Creating org with ipaCode: {} without broker", ipaCode);
+      log.info("Creating org with ipaCode {} without broker", ipaCode);
     }
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
