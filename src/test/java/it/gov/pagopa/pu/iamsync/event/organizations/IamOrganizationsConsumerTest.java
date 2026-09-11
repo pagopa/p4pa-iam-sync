@@ -49,6 +49,16 @@ class IamOrganizationsConsumerTest {
   }
 
   @Test
+  void givenMissingBrokerIdWhenAcceptThenDiscardMessage() {
+    ScContractDTO scContractEvent = buildBaseScContractEvent();
+    scContractEvent.setRootAggregator(new ScRootAggregatorDTO());
+
+    iamOrganizationsConsumer.accept(scContractEvent);
+
+    verify(organizationCreationHandlerServiceMock).createOrganization(scContractEvent);
+  }
+
+  @Test
   void givenValidScContractEventWhenAcceptThenHandleCreateOrganization() {
     ScContractDTO scContractEvent = buildBaseScContractEvent();
     ScRootAggregatorDTO rootAggregator = new ScRootAggregatorDTO();

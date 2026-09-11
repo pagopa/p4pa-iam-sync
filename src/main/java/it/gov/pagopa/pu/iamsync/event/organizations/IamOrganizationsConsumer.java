@@ -18,9 +18,11 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
 
   @Override
   public void accept(ScContractDTO scContractEvent) {
+    String ipaCode = scContractEvent.getInstitution().getOriginId();
+
     log.info("Received event on organization {} (originId {}) (institutionId {}) and product {} of type {}",
       scContractEvent.getInstitution().getTaxCode(),
-      scContractEvent.getInstitution().getOriginId(),
+      ipaCode,
       scContractEvent.getInstitutionId(),
       scContractEvent.getProduct(),
       scContractEvent.getType()
@@ -29,6 +31,10 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
     if (!PIATTAFORMA_UNITARIA_PRODUCT.equals(scContractEvent.getProduct())) {
       log.info("Discarding event due to not matching product");
       return;
+    }
+
+    if (scContractEvent.getRootAggregator() == null) {
+      log.info("Creating org with ipaCode: {} without broker", ipaCode);
     }
 
     organizationCreationHandlerService.createOrganization(scContractEvent);
