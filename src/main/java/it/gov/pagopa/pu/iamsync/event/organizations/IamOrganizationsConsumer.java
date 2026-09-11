@@ -33,6 +33,13 @@ public class IamOrganizationsConsumer implements Consumer<ScContractDTO> {
       return;
     }
 
+    if (scContractEvent.getInstitution().getSubUnitCode() != null) {
+      log.info("Discarding event because subUnit creation from queue is not supported (subUnitCode: {})",
+        scContractEvent.getInstitution().getSubUnitCode()
+      );
+      return;
+    }
+
     if (scContractEvent.getRootAggregator() == null) {
       log.info("Creating org with ipaCode {} without broker", ipaCode);
     }
