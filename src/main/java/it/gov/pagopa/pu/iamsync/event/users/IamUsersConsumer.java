@@ -22,7 +22,7 @@ public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
 
   @Override
   public void accept(ScUsersNotificationDTO scUsersNotificationEvent) {
-    log.info("Received event on user {} of institutionId {}, product {} of type {} and relationshipStatus {}, updatedAt {}",
+    log.info("Received event on user {} of institutionId {}, product {} of type {}, relationshipStatus {} and updatedAt {}",
       scUsersNotificationEvent.getUser().getUserId(),
       scUsersNotificationEvent.getInstitutionId(),
       scUsersNotificationEvent.getProductId(),
