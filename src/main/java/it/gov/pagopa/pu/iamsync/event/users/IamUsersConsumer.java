@@ -22,12 +22,13 @@ public class IamUsersConsumer implements Consumer<ScUsersNotificationDTO> {
 
   @Override
   public void accept(ScUsersNotificationDTO scUsersNotificationEvent) {
-    log.info("Received event on user {} of institutionId {}, product {} of type {} and relationshipStatus {}",
+    log.info("Received event on user {} of institutionId {}, product {} of type {} and relationshipStatus {}, updatedAt {}",
       scUsersNotificationEvent.getUser().getUserId(),
       scUsersNotificationEvent.getInstitutionId(),
       scUsersNotificationEvent.getProductId(),
       scUsersNotificationEvent.getEventType(),
-      scUsersNotificationEvent.getUser().getRelationshipStatus()
+      scUsersNotificationEvent.getUser().getRelationshipStatus(),
+      scUsersNotificationEvent.getUpdatedAt()
     );
 
     if (!PIATTAFORMA_UNITARIA_PRODUCT.equals(scUsersNotificationEvent.getProductId())) {
