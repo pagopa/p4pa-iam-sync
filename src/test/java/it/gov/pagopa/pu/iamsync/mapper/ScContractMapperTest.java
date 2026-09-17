@@ -1,8 +1,7 @@
 package it.gov.pagopa.pu.iamsync.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static it.gov.pagopa.pu.iamsync.utils.Constants.SC_CONTRACT_ACTIVE_STATE;
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO;
 import it.gov.pagopa.pu.iamsync.event.organizations.dto.ScContractDTO.ScInstitutionDTO;
@@ -24,13 +23,12 @@ class ScContractMapperTest {
     ScContractDTO scContractEvent = new ScContractDTO();
     scContractEvent.setInstitutionId("institutionId");
     scContractEvent.setCreatedAt(OffsetDateTime.now());
-    scContractEvent.setState("ACTIVE");
+    scContractEvent.setState(SC_CONTRACT_ACTIVE_STATE);
 
     ScInstitutionDTO institution = new ScInstitutionDTO();
     institution.setOriginId("ipaCode");
     institution.setTaxCode("12345678903");
     institution.setDescription("Comune di Test");
-    institution.setInstitutionType("PA");
     institution.setDigitalAddress("pec@comune.test.it");
     scContractEvent.setInstitution(institution);
 
@@ -38,27 +36,25 @@ class ScContractMapperTest {
     rootAggregator.setInstitutionId("1");
     scContractEvent.setRootAggregator(rootAggregator);
 
-    OrganizationCreateDTO result = scContractMapper.mapToOrganizationCreateDTO(scContractEvent);
+    OrganizationCreateDTO result = scContractMapper.mapToOrganizationCreateDTO(scContractEvent, OrganizationStatus.ACTIVE);
 
     assertEquals(scContractEvent.getInstitutionId(), result.getExternalOrganizationId());
     assertEquals(scContractEvent.getCreatedAt().toLocalDate(), result.getStartDate());
-    assertEquals(scContractEvent.getState(), result.getStatus().getValue());
+    assertEquals(OrganizationStatus.ACTIVE, result.getStatus());
     assertEquals(scContractEvent.getInstitution().getOriginId(), result.getIpaCode());
     assertEquals(scContractEvent.getInstitution().getTaxCode(), result.getOrgFiscalCode());
     assertEquals(scContractEvent.getInstitution().getDescription(), result.getOrgName());
-    assertEquals(scContractEvent.getInstitution().getInstitutionType(), result.getOrgTypeCode());
     assertEquals(scContractEvent.getInstitution().getDigitalAddress(), result.getOrgEmail());
     assertFalse(result.getFlagNotifyIo());
     assertFalse(result.getFlagNotifyOutcomePush());
     assertFalse(result.getFlagPaymentNotification());
     assertFalse(result.getPdndEnabled());
+    assertFalse(result.getFlagTreasury());
   }
 
   @Test
   void givenNullEventWhenMapToOrganizationCreateDTOThenReturnNull() {
-    assertNull(scContractMapper.mapToOrganizationCreateDTO(null));
     assertNull(scContractMapper.mapToOrganizationCreateDTO(null,
       OrganizationStatus.DRAFT));
   }
-
 }
