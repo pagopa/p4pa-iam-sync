@@ -75,7 +75,7 @@ class OrganizationSearchClientTest {
     when(
       organizationSearchControllerApiMock.crudOrganizationsFindByIpaCode(
         orgIpaCode))
-      .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE"));
+      .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
     // When
     Organization result = organizationSearchClient.findByIpaCode(orgIpaCode);
@@ -114,7 +114,7 @@ class OrganizationSearchClientTest {
     when(
       organizationSearchControllerApiMock.crudOrganizationsFindByExternalOrganizationId(
         externalOrganizationId))
-      .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE"));
+      .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
     // When
     Organization result = organizationSearchClient.findByExternalOrganizationId(
